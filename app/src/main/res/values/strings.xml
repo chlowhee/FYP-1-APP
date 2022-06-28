@@ -9,4 +9,5 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="connect">Connect</string>
     <string name="space">Space</string>
+    <string name="on">ON</string>
 </resources>
