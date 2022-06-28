@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.createDataStore
-import com.example.jasiriheart.data.DataStoreRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
