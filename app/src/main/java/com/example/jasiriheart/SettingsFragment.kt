@@ -46,7 +46,7 @@ class SettingsFragment : Fragment() {
             //put waiting for pairing / device name
         }
 
-        onBluetooth()
+        onOffBluetooth()
     }
 
     private fun checkBTIsConnected(): Boolean {
@@ -60,7 +60,7 @@ class SettingsFragment : Fragment() {
     //set image according to bt stat (datastorerepo)
 
     @SuppressLint("SetTextI18n")
-    private fun onBluetooth() {
+    private fun onOffBluetooth() {
         binding.bluetoothOnOff.run {
             setOnClickListener {
                 if (text == "OFF") {
@@ -71,18 +71,31 @@ class SettingsFragment : Fragment() {
                 } else {
 //                turn off BT
                     bAdapter.disable()
+                    Toast.makeText(activity, "Bluetooth is turned off", Toast.LENGTH_LONG).show()
                     text = "OFF"
                 }
             }
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
             REQUEST_CODE_ENABLE_BT ->
                 if (requestCode == Activity.RESULT_OK) {
                     Toast.makeText(activity, "Bluetooth is on", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(activity, "Bluetooth is unable to turn on", Toast.LENGTH_LONG).show()
                 }
+        }
+    }
+
+    private fun connectBT() {
+        binding.bluetoothConnect.setOnClickListener{
+            val childFragMgr = childFragmentManager
+
+
         }
     }
 
