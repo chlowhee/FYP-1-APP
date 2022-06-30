@@ -5,11 +5,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
+        android:id="@+id/exit_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="X"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <TextView
         android:id="@+id/tvDeviceStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginRight="20dp"
         android:text="status"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -18,7 +29,7 @@
         android:layout_alignParentLeft="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exit_btn"
         />
 
     <TextView
