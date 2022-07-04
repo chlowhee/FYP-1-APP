@@ -1,15 +1,16 @@
-package com.example.jasiriheart
+package com.example.jasiriheart.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.jasiriheart.bluetooth.BluetoothActivity
 import com.example.jasiriheart.data.DataStoreRepo
 import com.example.jasiriheart.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +27,7 @@ class SettingsFragment : Fragment() {
 
 
     @Inject lateinit var dataStoreRepo: DataStoreRepo
+    private lateinit var bluetoothActivity: BluetoothActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +49,7 @@ class SettingsFragment : Fragment() {
         }
 
         onOffBluetooth()
+        connectBT()
     }
 
     private fun checkBTIsConnected(): Boolean {
@@ -93,9 +96,11 @@ class SettingsFragment : Fragment() {
 
     private fun connectBT() {
         binding.bluetoothConnect.setOnClickListener{
-            val childFragMgr = childFragmentManager
-
-
+            if (bAdapter.isEnabled) {
+                startActivity(Intent(activity, BluetoothActivity::class.java))
+            } else {
+                Toast.makeText(activity, "Please turn on bluetooth first", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

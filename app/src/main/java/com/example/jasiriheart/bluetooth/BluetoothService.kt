@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -18,7 +17,7 @@ import java.io.OutputStream
 import java.nio.charset.Charset
 import java.util.*
 
-
+const val TAG = "Bluetooth Service"
 class BluetoothService(context: Context) {
 
     lateinit var bAdapter:BluetoothAdapter
@@ -44,8 +43,7 @@ class BluetoothService(context: Context) {
         activateAcceptThread()
     }
 
-    private class AcceptThread : Thread() {
-        lateinit var btService: BluetoothService
+    inner class AcceptThread : Thread() {
         lateinit var constants: Constants
         private val bluetoothServerSocket: BluetoothServerSocket?
         override fun run() {
@@ -55,13 +53,14 @@ class BluetoothService(context: Context) {
             try {
                 socket = bluetoothServerSocket!!.accept()
             } catch (e: IOException) {
-                Log.e(TAG, "Socket's accept() method failed", e)
+                Log.e(TAG,"Socket's accept() method failed", e)
                 //                    break;
             }
             if (socket != null) {
                 // A connection was accepted. Perform work associated with
                 // the connection in a separate thread.
-                btService.connectedSocket(socket, socket.remoteDevice)
+
+                connectedSocket(socket, socket.remoteDevice)
                 //                }
             }
         }
@@ -81,9 +80,9 @@ class BluetoothService(context: Context) {
             var tmp: BluetoothServerSocket? = null
             try {
                 // MY_UUID is the app's UUID string, also used by the client code.
-                tmp = btService.bAdapter.listenUsingInsecureRfcommWithServiceRecord(
+                tmp = bAdapter.listenUsingInsecureRfcommWithServiceRecord(
                     constants.APP_NAME,
-                    btService.MY_UUID
+                    MY_UUID
                 )
             } catch (e: IOException) {
                 Log.e(TAG, "Socket's listen() method failed", e)
@@ -92,23 +91,21 @@ class BluetoothService(context: Context) {
         }
     }
 
-    private class ConnectThread(bluetoothDevice: BluetoothDevice, uuid: UUID) :
-        Thread() {
-        lateinit var btService: BluetoothService
+    inner class ConnectThread(bluetoothDevice: BluetoothDevice, uuid: UUID) : Thread() {
         private var bluetoothSocket: BluetoothSocket? = null
         override fun run() {
             var bTSocket: BluetoothSocket? = null
             try {
                 // Get a BluetoothSocket to connect with the given BluetoothDevice.
                 // MY_UUID is the app's UUID string, also used in the server code.
-                bTSocket = btService.bTDevice.createRfcommSocketToServiceRecord(btService.uuidDevice)
+                bTSocket = bTDevice?.createRfcommSocketToServiceRecord(uuidDevice)
             } catch (e: IOException) {
                 Log.e(TAG, "Socket's create() method failed", e)
             }
             bluetoothSocket = bTSocket
 
             // Cancel discovery because it otherwise slows down the connection.
-            btService.bAdapter.cancelDiscovery()
+            bAdapter.cancelDiscovery()
             try {
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
@@ -116,7 +113,7 @@ class BluetoothService(context: Context) {
 
                 // The connection attempt succeeded. Perform work associated with
                 // the connection in a separate thread.
-                btService.bTDevice?.let { btService.connectedSocket(bluetoothSocket!!, it) }
+                bTDevice?.let { connectedSocket(bluetoothSocket!!, it) }
             } catch (connectException: IOException) {
                 // Unable to connect; close the socket and return.
                 try {
@@ -125,16 +122,16 @@ class BluetoothService(context: Context) {
                     Log.e(TAG, "Could not close the client socket", closeException)
                 }
                 try {
-                    val bluetoothActivity: FragBluetoothConnection = btService.context as FragBluetoothConnection
+                    val bluetoothActivity: BluetoothActivity = context as BluetoothActivity
                     bluetoothActivity.runOnUiThread(Runnable {
-                        Toast.makeText(btService.context, "Failed to connect to the Device.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Failed to connect to the Device.", Toast.LENGTH_LONG).show()
                     })
                 } catch (ex: Exception) {
                     ex.printStackTrace()
                 }
             }
             try {
-                btService.progressDialog?.dismiss()
+                progressDialog?.dismiss()
             } catch (np: NullPointerException) {
                 np.printStackTrace()
             }
@@ -152,8 +149,8 @@ class BluetoothService(context: Context) {
         init {
             // Use a temporary object that is later assigned to mmSocket
             // because mmSocket is final.
-            btService.bTDevice = bluetoothDevice
-            btService.uuidDevice = uuid
+            bTDevice = bluetoothDevice
+            uuidDevice = uuid
         }
     }
 
@@ -183,8 +180,7 @@ class BluetoothService(context: Context) {
         connectThread!!.start()
     }
 
-    private class ConnectedThread(socket: BluetoothSocket) : Thread() {
-        lateinit var btService:BluetoothService
+    inner class ConnectedThread(socket: BluetoothSocket) : Thread() {
         private val socket: BluetoothSocket
         private val inputStream: InputStream?
         private val outputStream: OutputStream?
@@ -201,14 +197,14 @@ class BluetoothService(context: Context) {
                     val msg = String(buffer, 0, noBytes)
                     val msgIntent = Intent("incomingMessage")
                     msgIntent.putExtra("receivedMessage", msg)
-                    btService.context?.let { LocalBroadcastManager.getInstance(it).sendBroadcast(msgIntent) }
+                    context?.let { LocalBroadcastManager.getInstance(it).sendBroadcast(msgIntent) }
                 } catch (e: IOException) {
                     Log.d(TAG, "Input stream was disconnected", e)
-                    btService.connectStatus = Intent("ConnectionStatus")
-                    btService.connectStatus!!.putExtra("Status", "disconnected")
-                    btService.connectStatus!!.putExtra("Device", btService.bTDevice)
-                    btService.context?.let { LocalBroadcastManager.getInstance(it).sendBroadcast(btService.connectStatus!!) }
-                    btService.connStatusFlag = false
+                    connectStatus = Intent("ConnectionStatus")
+                    connectStatus!!.putExtra("Status", "disconnected")
+                    connectStatus!!.putExtra("Device", bTDevice)
+                    context?.let { LocalBroadcastManager.getInstance(it).sendBroadcast(connectStatus!!) }
+                    connStatusFlag = false
                     break
                 }
             }
@@ -236,11 +232,11 @@ class BluetoothService(context: Context) {
 
         //        private byte[] buffer; // mmBuffer store for the stream
         init {
-            btService.connectStatus = Intent("ConnectionStatus")
-            btService.connectStatus!!.putExtra("Status", "connected")
-            btService.connectStatus!!.putExtra("Device", btService.bTDevice)
-            btService.context?.let { LocalBroadcastManager.getInstance(it).sendBroadcast(btService.connectStatus!!) }
-            btService.connStatusFlag = true
+            connectStatus = Intent("ConnectionStatus")
+            connectStatus!!.putExtra("Status", "connected")
+            connectStatus!!.putExtra("Device", bTDevice)
+            context?.let { LocalBroadcastManager.getInstance(it).sendBroadcast(connectStatus!!) }
+            connStatusFlag = true
             this.socket = socket
             var tmpIn: InputStream? = null
             var tmpOut: OutputStream? = null
@@ -263,7 +259,7 @@ class BluetoothService(context: Context) {
         }
     }
 
-    private fun connectedSocket(
+    fun connectedSocket(
         bluetoothSocket: BluetoothSocket,
         bluetoothDevice: BluetoothDevice
     ) {

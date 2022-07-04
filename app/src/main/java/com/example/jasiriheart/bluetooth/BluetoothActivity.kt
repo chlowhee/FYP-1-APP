@@ -1,31 +1,34 @@
 package com.example.jasiriheart.bluetooth
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.*
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import com.example.jasiriheart.databinding.BluetoothConnectFragBinding
+import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.jasiriheart.R
+import com.example.jasiriheart.databinding.ActivityBluetoothBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
-import com.example.jasiriheart.R
 
 
 @AndroidEntryPoint
-class FragBluetoothConnection: Fragment() {
+class BluetoothActivity: AppCompatActivity() {
+    // change to activity hAHa
+
+    private lateinit var binding: ActivityBluetoothBinding
 
     lateinit var bluetoothAdapter: BluetoothAdapter
     lateinit var pairedDevices: ArrayList<BluetoothDevice>
@@ -33,16 +36,14 @@ class FragBluetoothConnection: Fragment() {
     lateinit var pairedDeviceListAdapter: DevicesListAdapter
     lateinit var availDeviceListAdapter: DevicesListAdapter
 
-    private var pairedDeviceListView = binding.lvPairedDevices
-    private var availDeviceListView = binding.lvAvailDevices
-    lateinit var connStatus: String
+    var connStatus: String? = null
     lateinit var dialog: ProgressDialog
 
     lateinit var sharedPreferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
     lateinit var btService: BluetoothService
-    lateinit var bTDevice: BluetoothDevice
+    var bTDevice: BluetoothDevice? = null
     val MY_UUID: UUID = UUID.fromString("ADD1B8EE-6773-4B2D-BE72-B4553E3ADE56")
 
     var retryConnect = false
@@ -54,7 +55,7 @@ class FragBluetoothConnection: Fragment() {
                 if (btService.connStatusFlag == false) {
                     connectDevice(bTDevice, MY_UUID)
                     Toast.makeText(
-                        activity,
+                        applicationContext,
                         "Successfuly reconnected!", Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -62,7 +63,7 @@ class FragBluetoothConnection: Fragment() {
                 retryConnect = false
             } catch (e: Exception) {
                 Toast.makeText(
-                    activity,
+                    applicationContext,
                     "Unable to reconnect, trying in 5 seconds",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -70,53 +71,77 @@ class FragBluetoothConnection: Fragment() {
         }
     }
 
-    private var _binding: BluetoothConnectFragBinding? = null
-    private val binding get() = _binding!!
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = BluetoothConnectFragBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+        binding = ActivityBluetoothBinding.inflate(layoutInflater)
+        val view: View = binding.root
+        setContentView(view)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true)
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true)
-
-        //get default adapter
-
-        //get default adapter
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         pairedDevices = ArrayList()
         availDevices = ArrayList()
 
-        exitBtn()
+        initExitBtn()
+        scanNewDevices()
         pairedDeviceListView()
         availDeviceListView()
     }
 
-    private fun exitBtn() {
-        binding.exitBtn.setOnClickListener{
-            val parentFragmgr = parentFragmentManager
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterBTReceivers()
+    }
 
-            //close bt frag
+    override fun onPause() {
+        super.onPause()
+        unregisterBTReceivers()
+    }
+
+    override fun finish() {
+        super.finish()
+        val data = Intent()
+        data.putExtra("BTDevice", bTDevice)
+        data.putExtra("myUUID", MY_UUID)
+        setResult(RESULT_OK, data)
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        sharedPreferences = applicationContext.getSharedPreferences(
+            "Shared Preferences",
+            MODE_PRIVATE
+        )
+        if (sharedPreferences.contains("connStatus")) {
+            connStatus = sharedPreferences.getString("connStatus", "")!!
+        }
+
+        binding.tvDeviceStatus.setText(connStatus)
+
+        editor = sharedPreferences.edit()
+        editor.putString("connStatus", binding.tvDeviceStatus.getText().toString())
+        editor.commit()
+        finish()
+    }
+
+    private fun initExitBtn() {
+        binding.exitBtn.setOnClickListener{
+            finish()
         }
     }
 
     private fun pairedDeviceListView() {
-        pairedDeviceListView.onItemClickListener =
+        binding.lvPairedDevices.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
                 bluetoothAdapter.cancelDiscovery()
-                availDeviceListView.adapter = availDeviceListAdapter
+                if (this::availDeviceListAdapter.isInitialized) binding.lvAvailDevices.adapter = availDeviceListAdapter
 
                 //                String deviceName = pairedDevices.get(i).getName();
                 //                String deviceAddress = pairedDevices.get(i).getAddress();
-                btService = BluetoothService(requireContext())
+                btService = BluetoothService(this)
                 bTDevice = pairedDevices[i]
                 if (bTDevice != null) {
                     connectDevice(bTDevice, MY_UUID)
@@ -125,13 +150,13 @@ class FragBluetoothConnection: Fragment() {
     }
 
     private fun availDeviceListView() {
-        availDeviceListView.onItemClickListener =
+        binding.lvAvailDevices.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
                 bluetoothAdapter.cancelDiscovery()
-                pairedDeviceListView.adapter = pairedDeviceListAdapter
+                binding.lvPairedDevices.adapter = pairedDeviceListAdapter
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     availDevices[i].createBond()
-                    btService = BluetoothService(requireContext())
+                    btService = BluetoothService(this)
                     bTDevice = availDevices[i]
                 }
                 if (bTDevice != null) {
@@ -141,40 +166,33 @@ class FragBluetoothConnection: Fragment() {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    fun scanNewDevices(menuItem: MenuItem?) {
+    fun scanNewDevices() {
         availDevices.clear()
-        if (bluetoothAdapter != null) {
-            if (!bluetoothAdapter.isEnabled) {
-                Toast.makeText(
-                    requireContext(),
-                    "Please turn on Bluetooth",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            //scan devices
-            if (bluetoothAdapter.isDiscovering) {
-                bluetoothAdapter.cancelDiscovery()
-                checkPermissions()
-                bluetoothAdapter.startDiscovery()
-                val discoverIntent = IntentFilter(BluetoothDevice.ACTION_FOUND)
-                registerReceiver(bluetoothAvailDevicesReceiver, discoverIntent)
-            } else if (!bluetoothAdapter.isDiscovering) {
-                checkPermissions()
-                bluetoothAdapter.startDiscovery()
+        //scan devices
+        if (bluetoothAdapter.isDiscovering) {
+            bluetoothAdapter.cancelDiscovery()
+            checkPermissions()
+            if (bluetoothAdapter.startDiscovery()) {
                 val discoverIntent = IntentFilter(BluetoothDevice.ACTION_FOUND)
                 registerReceiver(bluetoothAvailDevicesReceiver, discoverIntent)
             }
-            pairedDevices.clear()
-            //get paired devices
-            val pairedDevicesList = bluetoothAdapter.bondedDevices
-            for (device in pairedDevicesList) {
-                pairedDevices.add(device!!)
-                pairedDeviceListAdapter = DevicesListAdapter(
-                    requireContext(),
-                    R.layout.lv_devices_list, pairedDevices
-                )
-                pairedDeviceListView.adapter = pairedDeviceListAdapter
+        } else if (!bluetoothAdapter.isDiscovering) {
+            checkPermissions()
+            if (bluetoothAdapter.startDiscovery()) {
+                val discoverIntent = IntentFilter(BluetoothDevice.ACTION_FOUND)
+                registerReceiver(bluetoothAvailDevicesReceiver, discoverIntent)
             }
+        }
+        pairedDevices.clear()
+        //get paired devices
+        val pairedDevicesList = bluetoothAdapter.bondedDevices
+        for (device in pairedDevicesList) {
+            pairedDevices.add(device!!)
+            pairedDeviceListAdapter = DevicesListAdapter(
+                this,
+                R.layout.lv_devices_list, pairedDevices
+            )
+            binding.lvPairedDevices.adapter = pairedDeviceListAdapter
         }
     }
 
@@ -263,16 +281,17 @@ class FragBluetoothConnection: Fragment() {
         }
     }
 
-    var bluetoothAvailDevicesReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    var bluetoothAvailDevicesReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
             val action = intent.action
-
+            Log.d("BlueScan", "1")
             // finding devices
             if (BluetoothDevice.ACTION_FOUND == action) {
+                Log.d("BlueScan", "2")
 
                 //get BluetoothDevice object from Intent
-                val bluetoothDevice =
-                    intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                val bluetoothDevice: BluetoothDevice? =
+                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
 
                 //add name and address to an array adapter
                 availDevices.add(bluetoothDevice!!)
@@ -282,11 +301,11 @@ class FragBluetoothConnection: Fragment() {
                             bluetoothDevice.address
                 )
                 availDeviceListAdapter = DevicesListAdapter(
-                    requireContext(),
+                    applicationContext,
                     R.layout.lv_devices_list,
                     availDevices
                 )
-                availDeviceListView.adapter = availDeviceListAdapter
+                binding.lvAvailDevices.adapter = availDeviceListAdapter
             }
         }
     }
@@ -299,7 +318,7 @@ class FragBluetoothConnection: Fragment() {
                     intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 if (bluetoothDevice!!.bondState == BluetoothDevice.BOND_BONDED) {
                     Toast.makeText(
-                        requireContext(), "Successfully paired with "
+                        applicationContext, "Successfully paired with "
                                 + bluetoothDevice.name, Toast.LENGTH_LONG
                     ).show()
                     bTDevice = bluetoothDevice
@@ -315,15 +334,19 @@ class FragBluetoothConnection: Fragment() {
     }
 
     private val connectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context?, intent: Intent) {
             val btDevice = intent.getParcelableExtra<BluetoothDevice>("Device")
             val status = intent.getStringExtra("Status")
+
+            // TODO: change sharedPreferences to DataStore stuff
             sharedPreferences =
-                ApplicationProvider.getApplicationContext<Context>().getSharedPreferences(
+                applicationContext.getSharedPreferences(
                     "Shared Preferences",
                     Context.MODE_PRIVATE
                 )
             editor = sharedPreferences.edit()
+
             if (status == "connected") {
                 try {
                     dialog.dismiss()
@@ -331,19 +354,20 @@ class FragBluetoothConnection: Fragment() {
                     np.printStackTrace()
                 }
                 Toast.makeText(
-                    requireContext(), "Device now connected to "
+                    applicationContext, "Device now connected to "
                             + btDevice!!.name, Toast.LENGTH_LONG
                 ).show()
                 editor.putString("connStatus", "Connected to " + btDevice.name)
                 binding.tvDeviceStatus.text = "Connected to " + btDevice.name
             } else if (status == "disconnected" && retryConnect == false) {
                 Toast.makeText(
-                    requireContext(), "Disconnected from "
+                    applicationContext, "Disconnected from "
                             + btDevice!!.name, Toast.LENGTH_LONG
                 ).show()
-                btService = BluetoothService(requireContext())
+                btService = BluetoothService(applicationContext)
+
                 sharedPreferences =
-                    ApplicationProvider.getApplicationContext<Context>().getSharedPreferences(
+                    getApplicationContext().getSharedPreferences(
                         "Shared Preferences",
                         Context.MODE_PRIVATE
                     )
@@ -376,5 +400,16 @@ class FragBluetoothConnection: Fragment() {
         }
     }
 
+    fun unregisterBTReceivers() {   //put on onDestroy in MainActivity & onPause
+        try {
+            unregisterReceiver(bluetoothBondReceiver)
+            unregisterReceiver(bluetoothScanReceiver)
+            unregisterReceiver(bluetoothStateReceiver)
+            unregisterReceiver(bluetoothAvailDevicesReceiver)
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(connectionReceiver)
+        } catch (exception: IllegalArgumentException) {
+            exception.printStackTrace()
+        }
+    }
 
 }
