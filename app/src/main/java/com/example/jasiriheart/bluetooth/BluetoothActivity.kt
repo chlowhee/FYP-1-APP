@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.jasiriheart.R
+import com.example.jasiriheart.data.DataStoreRepo
 import com.example.jasiriheart.databinding.ActivityBluetoothBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -26,7 +27,6 @@ import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class BluetoothActivity: AppCompatActivity() {
-    // change to activity hAHa
 
     private lateinit var binding: ActivityBluetoothBinding
 
@@ -35,6 +35,7 @@ class BluetoothActivity: AppCompatActivity() {
     lateinit var availDevices: ArrayList<BluetoothDevice>
     lateinit var pairedDeviceListAdapter: DevicesListAdapter
     lateinit var availDeviceListAdapter: DevicesListAdapter
+    lateinit var dataStoreRepo: DataStoreRepo
 
     var connStatus: String? = null
     lateinit var dialog: ProgressDialog
@@ -44,7 +45,7 @@ class BluetoothActivity: AppCompatActivity() {
 
     lateinit var btService: BluetoothService
     var bTDevice: BluetoothDevice? = null
-    val MY_UUID: UUID = UUID.fromString("ADD1B8EE-6773-4B2D-BE72-B4553E3ADE56")
+    val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
     var retryConnect = false
     var reconnectionHandler: Handler = Handler()
@@ -88,16 +89,7 @@ class BluetoothActivity: AppCompatActivity() {
         scanNewDevices()
         pairedDeviceListView()
         availDeviceListView()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterBTReceivers()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterBTReceivers()
+        setConnectedDeviceName()
     }
 
     override fun finish() {
@@ -133,6 +125,17 @@ class BluetoothActivity: AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun setConnectedDeviceName() {
+        if (bTDevice != null) {
+            val device = bTDevice!!.name
+            if (device != null) binding.tvDeviceStatus.text = device
+        } else {
+            binding.tvDeviceStatus.text = "" +
+                    "No device connected"
+        }
+    }
+
     private fun pairedDeviceListView() {
         binding.lvPairedDevices.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
@@ -145,6 +148,7 @@ class BluetoothActivity: AppCompatActivity() {
                 bTDevice = pairedDevices[i]
                 if (bTDevice != null) {
                     connectDevice(bTDevice, MY_UUID)
+                    setConnectedDeviceName()
                 }
             }
     }
@@ -153,7 +157,7 @@ class BluetoothActivity: AppCompatActivity() {
         binding.lvAvailDevices.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
                 bluetoothAdapter.cancelDiscovery()
-                binding.lvPairedDevices.adapter = pairedDeviceListAdapter
+                if (this::pairedDeviceListAdapter.isInitialized) binding.lvPairedDevices.adapter = pairedDeviceListAdapter
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     availDevices[i].createBond()
                     btService = BluetoothService(this)
@@ -284,10 +288,8 @@ class BluetoothActivity: AppCompatActivity() {
     var bluetoothAvailDevicesReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
             val action = intent.action
-            Log.d("BlueScan", "1")
             // finding devices
             if (BluetoothDevice.ACTION_FOUND == action) {
-                Log.d("BlueScan", "2")
 
                 //get BluetoothDevice object from Intent
                 val bluetoothDevice: BluetoothDevice? =
@@ -375,6 +377,7 @@ class BluetoothActivity: AppCompatActivity() {
                 editor.putString("connStatus", "Disconnected")
                 binding.tvDeviceStatus.text = "Disconnected"
                 editor.commit()
+                dataStoreRepo.setBluetoothIsConnected(false)
                 try {
                     dialog.show()
                 } catch (e: java.lang.Exception) {
@@ -400,7 +403,7 @@ class BluetoothActivity: AppCompatActivity() {
         }
     }
 
-    fun unregisterBTReceivers() {   //put on onDestroy in MainActivity & onPause
+    fun unregisterBTReceivers() {
         try {
             unregisterReceiver(bluetoothBondReceiver)
             unregisterReceiver(bluetoothScanReceiver)

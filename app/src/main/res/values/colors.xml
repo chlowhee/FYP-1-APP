@@ -13,4 +13,5 @@
     <color name="silver">#FFC0C0C0</color>
     <color name="background">#FF0B5387</color>
     <color name="joystickBackground">#FF073763</color>
+    <color name="red">#FFFF0000</color>
 </resources>

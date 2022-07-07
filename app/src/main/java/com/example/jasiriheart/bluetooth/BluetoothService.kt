@@ -20,16 +20,16 @@ import java.util.*
 const val TAG = "Bluetooth Service"
 class BluetoothService(context: Context) {
 
-    lateinit var bAdapter:BluetoothAdapter
-    var context: Context? = null
+    var bAdapter:BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    var context = context
 
-    val MY_UUID = UUID.fromString("ADD1B8EE-6773-4B2D-BE72-B4553E3ADE56")
+    val MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
     private var acceptThread: AcceptThread? = null
 
     private var connectThread: ConnectThread? = null
     private var bTDevice: BluetoothDevice? = null
-    private var uuidDevice: UUID? = null
+    private var uuidDevice = MY_UUID
 
     var progressDialog: ProgressDialog? = null
     var connectStatus: Intent? = null
@@ -38,10 +38,10 @@ class BluetoothService(context: Context) {
     var connStatusFlag = false
 
     init {
-        bAdapter = BluetoothAdapter.getDefaultAdapter()
-        this.context = context
+        Log.d(TAG, "init btService")
         activateAcceptThread()
     }
+
 
     inner class AcceptThread : Thread() {
         lateinit var constants: Constants
@@ -49,7 +49,6 @@ class BluetoothService(context: Context) {
         override fun run() {
             var socket: BluetoothSocket? = null
             // Keep listening until exception occurs or a socket is returned.
-//            while (true) {
             try {
                 socket = bluetoothServerSocket!!.accept()
             } catch (e: IOException) {
@@ -61,7 +60,6 @@ class BluetoothService(context: Context) {
                 // the connection in a separate thread.
 
                 connectedSocket(socket, socket.remoteDevice)
-                //                }
             }
         }
 

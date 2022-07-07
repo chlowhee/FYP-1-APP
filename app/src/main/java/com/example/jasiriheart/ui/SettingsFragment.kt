@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.jasiriheart.R
 import com.example.jasiriheart.bluetooth.BluetoothActivity
 import com.example.jasiriheart.data.DataStoreRepo
 import com.example.jasiriheart.databinding.FragmentSettingsBinding
@@ -37,21 +38,32 @@ class SettingsFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         bAdapter = BluetoothAdapter.getDefaultAdapter()
 
-        if (bAdapter == null) {
-            binding.getPairedDevice.text = "BT is not available"
+        if (bAdapter.isEnabled) {
+            binding.run {
+                getPairedStatus.visibility = View.VISIBLE
+                bluetoothOnOff.text = "ON"
+            }
         } else {
-            //put waiting for pairing / device name
+            binding.run {
+                getPairedStatus.visibility = View.INVISIBLE
+                bluetoothOnOff.text = "OFF"
+            }
         }
 
         onOffBluetooth()
         connectBT()
+        setTextGetPairedStatus()
     }
 
+    /**
+     *   BLUETOOTH
+     */
     private fun checkBTIsConnected(): Boolean {
         var isConnected = false
         dataStoreRepo.bluetoothActive.observe(viewLifecycleOwner, {
@@ -60,7 +72,16 @@ class SettingsFragment : Fragment() {
         return isConnected
     }
 
-    //set image according to bt stat (datastorerepo)
+    @SuppressLint("SetTextI18n")
+    private fun setTextGetPairedStatus() {
+        binding.run {
+            if (checkBTIsConnected()) {
+                getPairedStatus.text = "Device connected"
+            } else {
+                getPairedStatus.text = "No devices connected"
+            }
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     private fun onOffBluetooth() {
@@ -80,7 +101,6 @@ class SettingsFragment : Fragment() {
             }
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -104,17 +124,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-//    private fun discoverBT() {
-//        binding.bluetoothConnect.setOnClickListener {
-//            if (bAdapter.isEnabled) {
-//                val devices = bAdapter.bondedDevices
-//                for (device in devices) {
-//                    val deviceName =
-//                }
-//            } else {
-//                Toast.makeText(activity, "Turn on bluetooth first", Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
-
+    /**
+     *
+     */
 }
