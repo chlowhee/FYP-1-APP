@@ -5,13 +5,15 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.jasiriheart.R
-import com.example.jasiriheart.bluetooth.BluetoothActivity
+import com.example.jasiriheart.bluetooth.BTDeviceFragment
+import com.example.jasiriheart.data.Constants
 import com.example.jasiriheart.data.DataStoreRepo
 import com.example.jasiriheart.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,11 +26,11 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     lateinit var bAdapter:BluetoothAdapter
-    private val REQUEST_CODE_ENABLE_BT = 1;
-
-
     @Inject lateinit var dataStoreRepo: DataStoreRepo
-    private lateinit var bluetoothActivity: BluetoothActivity
+//    private lateinit var bluetoothActivity: BluetoothActivity
+    private val btFragment = BTDeviceFragment()
+
+    private val TAG = "Settings Frag"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,18 +46,7 @@ class SettingsFragment : Fragment() {
 
         bAdapter = BluetoothAdapter.getDefaultAdapter()
 
-        if (bAdapter.isEnabled) {
-            binding.run {
-                getPairedStatus.visibility = View.VISIBLE
-                bluetoothOnOff.text = "ON"
-            }
-        } else {
-            binding.run {
-                getPairedStatus.visibility = View.INVISIBLE
-                bluetoothOnOff.text = "OFF"
-            }
-        }
-
+        initBTUi()
         onOffBluetooth()
         connectBT()
         setTextGetPairedStatus()
@@ -70,6 +61,20 @@ class SettingsFragment : Fragment() {
             isConnected = it
         })
         return isConnected
+    }
+
+    private fun initBTUi() {
+        if (bAdapter.isEnabled) {
+            binding.run {
+                getPairedStatus.visibility = View.VISIBLE
+                bluetoothOnOff.text = "ON"
+            }
+        } else {
+            binding.run {
+                getPairedStatus.visibility = View.INVISIBLE
+                bluetoothOnOff.text = "OFF"
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -90,8 +95,8 @@ class SettingsFragment : Fragment() {
                 if (text == "OFF") {
 //                turn on BT
                     var intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                    startActivityForResult(intent, REQUEST_CODE_ENABLE_BT)
-                    text = "ON"
+                    startActivityForResult(intent, Constants.REQUEST_ENABLE_BT)
+//                    text = "ON"
                 } else {
 //                turn off BT
                     bAdapter.disable()
@@ -104,20 +109,29 @@ class SettingsFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
-            REQUEST_CODE_ENABLE_BT ->
-                if (requestCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (bAdapter.isEnabled) {
+                    binding.bluetoothOnOff.text = "ON"
                     Toast.makeText(activity, "Bluetooth is on", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(activity, "Bluetooth is unable to turn on", Toast.LENGTH_LONG).show()
                 }
+            } else {
+                Log.d(TAG, "Bluetooth unable to turn on")
+            }
         }
+//        when(requestCode) {
+//            REQUEST_CODE_ENABLE_BT ->
+//                if (requestCode == Activity.RESULT_OK) {
+//                    Toast.makeText(activity, "Bluetooth is on", Toast.LENGTH_LONG).show()
+//                }
+//        }
     }
 
     private fun connectBT() {
         binding.bluetoothConnect.setOnClickListener{
             if (bAdapter.isEnabled) {
-                startActivity(Intent(activity, BluetoothActivity::class.java))
+//                startActivity(Intent(activity, BluetoothActivity::class.java))
+                childFragmentManager.beginTransaction().add(R.id.container, btFragment).commit()
             } else {
                 Toast.makeText(activity, "Please turn on bluetooth first", Toast.LENGTH_LONG).show()
             }

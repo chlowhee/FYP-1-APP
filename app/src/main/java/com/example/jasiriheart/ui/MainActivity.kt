@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.jasiriheart.R
-import com.example.jasiriheart.bluetooth.BluetoothActivity
 import com.example.jasiriheart.databinding.ActivityMainBinding
 import com.example.jasiriheart.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var btActivity: BluetoothActivity
+//    private lateinit var btActivity: BluetoothActivity
     private val settingsFrag = SettingsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        btActivity.unregisterBTReceivers()
+//        btActivity.unregisterBTReceivers()
     }
 
     /**
