@@ -33,6 +33,7 @@ import com.example.jasiriheart.R;
 import com.example.jasiriheart.data.Constants;
 import com.example.jasiriheart.common.OnRecyclerViewInteractedListener;
 import com.example.jasiriheart.bluetooth.BTDeviceAdapter;
+import com.example.jasiriheart.databinding.FragmentBtDeviceBinding;
 //import app.util.DialogUtil;
 //import app.util.Utility;
 
@@ -41,6 +42,8 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     private static final int DURATION_ONE_SEC = 1000;
     private BluetoothAdapter btAdapter;
     private BTDeviceAdapter btDeviceAdapter;
+
+    private FragmentBtDeviceBinding binding;
 
     // progress count down
     Handler handler = new Handler();
@@ -58,7 +61,8 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     };
 
     private void updateSubtitle(String subtitle){
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subtitle);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subtitle);
+        binding.btDiscoveringSubtitle.setText(subtitle);
     }
 
     @Override
@@ -77,13 +81,16 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_select_device, container, false);
+//        View view = inflater.inflate(R.layout.layout_select_device, container, false);
 
-        RecyclerView rvDevices  = view.findViewById(R.id.rv_bt_devices);
-        rvDevices.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding = FragmentBtDeviceBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+//
+//        RecyclerView rvDevices  = view.findViewById(R.id.rv_bt_devices);
+        binding.rvBtDevices.setLayoutManager(new LinearLayoutManager(getContext()));
         btDeviceAdapter = new BTDeviceAdapter();
         btDeviceAdapter.setOnRecyclerViewInteractListener(this);
-        rvDevices.setAdapter(btDeviceAdapter);
+        binding.rvBtDevices.setAdapter(btDeviceAdapter);
 
         refreshPairDevices();
         return view;
@@ -92,7 +99,8 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.activity_bt_devices));
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.activity_bt_devices));
+        initRefreshBtn();
     }
 
     @Override
@@ -117,20 +125,24 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
         doEndScanning();
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.bluetooth, menu);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.bluetooth, menu);
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_bt_refresh_devices: doRefresh();  return true;
-//            case R.id.action_bt_discoverable: enableDiscoverable(); return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_bt_refresh_devices: doRefresh();  return true;
+////            case R.id.action_bt_discoverable: enableDiscoverable(); return true;
+//            default:
+//                return super.onContextItemSelected(item);
+//        }
+//    }
+
+    private void initRefreshBtn() {
+        binding.refreshBtn.setOnClickListener(v -> doRefresh());
     }
 
     private void doRefresh(){

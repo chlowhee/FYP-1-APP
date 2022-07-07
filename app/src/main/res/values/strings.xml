@@ -25,4 +25,5 @@
     <string name="bt_devices">DEVICES</string>
     <string name="exit_x">X</string>
     <string name="no_devices_connected">No devices connected</string>
+    <string name="bluetooth_devices">Bluetooth Devices</string>
 </resources>
