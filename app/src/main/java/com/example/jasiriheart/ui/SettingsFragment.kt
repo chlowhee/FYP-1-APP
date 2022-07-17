@@ -7,12 +7,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.jasiriheart.R
 import com.example.jasiriheart.bluetooth.BTDeviceFragment
+import com.example.jasiriheart.bluetooth.BluetoothController
 import com.example.jasiriheart.data.Constants
 import com.example.jasiriheart.data.DataStoreRepo
 import com.example.jasiriheart.databinding.FragmentSettingsBinding
@@ -27,8 +28,8 @@ class SettingsFragment : Fragment() {
 
     lateinit var bAdapter:BluetoothAdapter
     @Inject lateinit var dataStoreRepo: DataStoreRepo
-//    private lateinit var bluetoothActivity: BluetoothActivity
     private val btFragment = BTDeviceFragment()
+    private val controller = BluetoothController(activity)
 
     private val TAG = "Settings Frag"
 
@@ -50,6 +51,7 @@ class SettingsFragment : Fragment() {
         onOffBluetooth()
         connectBT()
         setTextGetPairedStatus()
+        initTestBtn()
     }
 
     /**
@@ -107,34 +109,54 @@ class SettingsFragment : Fragment() {
         }
     }
 
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        super.onOptionsItemSelected(item)
+//        val intent = Intent(activity, DynamicActivity::class.java).putExtra(Constants.EXTRA_FRAGMENT, Constants.REQUEST_PICK_BT_DEVICE)
+//        startActivityForResult(intent, Constants.REQUEST_PICK_BT_DEVICE)
+//        return true
+//    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Constants.REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (bAdapter.isEnabled) {
-                    binding.bluetoothOnOff.text = "ON"
-                    Toast.makeText(activity, "Bluetooth is on", Toast.LENGTH_LONG).show()
+
+        when (requestCode) {
+            Constants.REQUEST_ENABLE_BT ->
+                if (resultCode == Activity.RESULT_OK) {
+                    if (bAdapter.isEnabled) {
+                        binding.bluetoothOnOff.text = "ON"
+                        Toast.makeText(activity, "Bluetooth is on", Toast.LENGTH_LONG).show()
+                    }
                 }
-            } else {
-                Log.d(TAG, "Bluetooth unable to turn on")
-            }
+            Constants.REQUEST_PICK_BT_DEVICE ->
+                if (resultCode == Activity.RESULT_OK) {
+                    // connect to device
+                    val address = data!!.extras!!.getString(Constants.EXTRA_DEVICE_ADDRESS)
+                    Log.d(TAG, "pick bt device $address")
+                    if (controller != null) {
+                        Log.d(TAG, "isit in here?")
+                        controller.connectDevice(address, true)
+                    }
+                }
+            else -> {
+                Log.d(TAG, "what request code?")}
         }
-//        when(requestCode) {
-//            REQUEST_CODE_ENABLE_BT ->
-//                if (requestCode == Activity.RESULT_OK) {
-//                    Toast.makeText(activity, "Bluetooth is on", Toast.LENGTH_LONG).show()
-//                }
-//        }
     }
 
     private fun connectBT() {
         binding.bluetoothConnect.setOnClickListener{
             if (bAdapter.isEnabled) {
-//                startActivity(Intent(activity, BluetoothActivity::class.java))
-                childFragmentManager.beginTransaction().add(R.id.container, btFragment).commit()
+                val intent = Intent(activity, DynamicActivity::class.java)
+//                startActivity(intent)
+                startActivityForResult(intent, Constants.REQUEST_PICK_BT_DEVICE)
             } else {
                 Toast.makeText(activity, "Please turn on bluetooth first", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun initTestBtn(){
+        binding.testBtn.setOnClickListener{
+            controller.sendMessage("GG")
         }
     }
 

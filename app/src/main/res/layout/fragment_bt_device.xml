@@ -45,16 +45,18 @@
         android:layout_height="wrap_content"
         android:text="@string/discovering"
         android:textColor="@color/white"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/bt_devices_title"
         app:layout_constraintTop_toBottomOf="@+id/bt_devices_title"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bt_devices"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@+id/bt_discovering_subtitle"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

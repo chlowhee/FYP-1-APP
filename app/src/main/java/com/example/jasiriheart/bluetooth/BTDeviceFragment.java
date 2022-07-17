@@ -61,7 +61,9 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     };
 
     private void updateSubtitle(String subtitle){
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subtitle);
+        if (binding.btDiscoveringSubtitle.getVisibility() == View.INVISIBLE) {
+            binding.btDiscoveringSubtitle.setVisibility(View.VISIBLE);
+        }
         binding.btDiscoveringSubtitle.setText(subtitle);
     }
 
@@ -81,16 +83,16 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.layout_select_device, container, false);
 
         binding = FragmentBtDeviceBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-//
-//        RecyclerView rvDevices  = view.findViewById(R.id.rv_bt_devices);
-        binding.rvBtDevices.setLayoutManager(new LinearLayoutManager(getContext()));
+
         btDeviceAdapter = new BTDeviceAdapter();
         btDeviceAdapter.setOnRecyclerViewInteractListener(this);
+
+        binding.rvBtDevices.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvBtDevices.setAdapter(btDeviceAdapter);
+
 
         refreshPairDevices();
         return view;
@@ -99,8 +101,9 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.activity_bt_devices));
+
         initRefreshBtn();
+        initExitBtn();
     }
 
     @Override
@@ -125,24 +128,14 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
         doEndScanning();
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.bluetooth, menu);
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_bt_refresh_devices: doRefresh();  return true;
-////            case R.id.action_bt_discoverable: enableDiscoverable(); return true;
-//            default:
-//                return super.onContextItemSelected(item);
-//        }
-//    }
-
     private void initRefreshBtn() {
         binding.refreshBtn.setOnClickListener(v -> doRefresh());
+    }
+
+    private void initExitBtn() {
+        binding.exitBtn.setOnClickListener(v ->
+                requireActivity().finish()
+            );
     }
 
     private void doRefresh(){

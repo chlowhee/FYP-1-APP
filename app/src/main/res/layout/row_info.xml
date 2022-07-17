@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@color/white"
             android:text="@string/no_device_found"/>
 
     </LinearLayout>

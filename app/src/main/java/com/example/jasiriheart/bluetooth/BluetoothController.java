@@ -20,7 +20,7 @@ public class BluetoothController {
     ArrayList<BluetoothStatusListener> listeners;
 
     public BluetoothController(Context context){
-//        this.service = new BluetoothChatService(context, mHandler);
+        this.service = new BluetoothChatService(context);
         this.listeners = new ArrayList<>();
         this.btAdapter = BluetoothAdapter.getDefaultAdapter();
     }

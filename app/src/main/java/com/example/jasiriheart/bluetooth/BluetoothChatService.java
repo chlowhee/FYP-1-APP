@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +52,7 @@ public class BluetoothChatService {
 
     // Member fields
     private final BluetoothAdapter mAdapter;
-    private final Handler mHandler;
+//    private final Handler mHandler;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
@@ -67,26 +68,31 @@ public class BluetoothChatService {
      * Constructor. Prepares a new BluetoothChat session.
      *
      * @param context The UI Activity Context
-     * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothChatService(Context context, Handler handler) {
+//    public BluetoothChatService(Context context, Handler handler) {
+//        mAdapter = BluetoothAdapter.getDefaultAdapter();
+//        mState = STATE_NONE;
+//        mNewState = mState;
+//        mHandler = handler;
+//    }
+
+    public BluetoothChatService(Context context) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mNewState = mState;
-        mHandler = handler;
     }
 
-    /**
-     * Update UI title according to the current state of the chat connection
-     */
-    private synchronized void updateUserInterfaceTitle() {
-        mState = getState();
-        Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
-        mNewState = mState;
-
-        // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
-    }
+//    /**
+//     * Update UI title according to the current state of the chat connection
+//     */
+//    private synchronized void updateUserInterfaceTitle() {
+//        mState = getState();
+//        Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
+//        mNewState = mState;
+//
+//        // Give the new state to the Handler so the UI Activity can update
+//        mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
+//    }
 
     /**
      * Return the current connection state.
@@ -115,7 +121,7 @@ public class BluetoothChatService {
         }
 
         // Update UI title
-        updateUserInterfaceTitle();
+//        updateUserInterfaceTitle();
     }
 
     /**
@@ -145,7 +151,7 @@ public class BluetoothChatService {
         mConnectThread = new ConnectThread(device, secure);
         mConnectThread.start();
         // Update UI title
-        updateUserInterfaceTitle();
+//        updateUserInterfaceTitle();
     }
 
     /**
@@ -175,14 +181,14 @@ public class BluetoothChatService {
         mConnectedThread = new ConnectedThread(socket, socketType);
         mConnectedThread.start();
 
-        // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.DEVICE_NAME, device.getName());
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-        // Update UI title
-        updateUserInterfaceTitle();
+//        // Send the name of the connected device back to the UI Activity
+//        Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
+//        Bundle bundle = new Bundle();
+//        bundle.putString(Constants.DEVICE_NAME, device.getName());
+//        msg.setData(bundle);
+//        mHandler.sendMessage(msg);
+//        // Update UI title
+//        updateUserInterfaceTitle();
     }
 
     /**
@@ -203,7 +209,7 @@ public class BluetoothChatService {
 
         mState = STATE_NONE;
         // Update UI title
-        updateUserInterfaceTitle();
+//        updateUserInterfaceTitle();
     }
 
     /**
@@ -229,15 +235,15 @@ public class BluetoothChatService {
      */
     private void connectionFailed() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Unable to connect device");
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
+//        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
+//        Bundle bundle = new Bundle();
+//        bundle.putString(Constants.TOAST, "Unable to connect device");
+//        msg.setData(bundle);
+//        mHandler.sendMessage(msg);
 
         mState = STATE_NONE;
         // Update UI title
-        updateUserInterfaceTitle();
+//        updateUserInterfaceTitle();
 
         // Start the app.service over to restart listening mode
         BluetoothChatService.this.start();
@@ -248,15 +254,15 @@ public class BluetoothChatService {
      */
     private void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Device connection was lost");
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
+//        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
+//        Bundle bundle = new Bundle();
+//        bundle.putString(Constants.TOAST, "Device connection was lost");
+//        msg.setData(bundle);
+//        mHandler.sendMessage(msg);
 
         mState = STATE_NONE;
         // Update UI title
-        updateUserInterfaceTitle();
+//        updateUserInterfaceTitle();
 
         // Start the app.service over to restart listening mode
         BluetoothChatService.this.start();
@@ -379,8 +385,8 @@ public class BluetoothChatService {
                     Log.d(TAG, msg);
 
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, msg)
-                            .sendToTarget();
+//                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, msg)
+//                            .sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
@@ -399,8 +405,8 @@ public class BluetoothChatService {
                 mmOutStream.write(buffer);
 
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
-                        .sendToTarget();
+//                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
+//                        .sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }
