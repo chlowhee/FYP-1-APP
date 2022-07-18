@@ -3,7 +3,6 @@ package com.example.jasiriheart.data
 interface Constants {
     companion object {
         const val SCAN_DURATION_SEC = 30
-        const val DISCOVERABLE_DURATION_SEC = 60
         const val MESSAGE_INTERVAL_MS = 1000
         const val MAP_UPDATE_INTERVAL_MS = 1500
         const val BT_RECONNECT_INTERVAL_MS = 5000

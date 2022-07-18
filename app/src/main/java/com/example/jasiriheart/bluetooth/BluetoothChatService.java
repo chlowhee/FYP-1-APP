@@ -18,7 +18,6 @@ package com.example.jasiriheart.bluetooth;
  * limitations under the License.
  */
 
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -34,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
-
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -171,7 +169,6 @@ public class BluetoothChatService {
             mConnectedThread = null;
         }
 
-
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, socketType);
         mConnectedThread.start();
@@ -262,9 +259,6 @@ public class BluetoothChatService {
         // Start the app.service over to restart listening mode
         BluetoothChatService.this.start();
     }
-
-
-
 
     /**
      * This thread runs while attempting to make an outgoing connection
