@@ -10,4 +10,15 @@
     <string name="connect">Connect</string>
     <string name="space">Space</string>
     <string name="on">ON</string>
+    <string name="off">OFF</string>
+<!--    BT-->
+    <string name="activity_bt_devices">Bluetooth Devices</string>
+    <string name="discovering">Discovering (%1$d) …</string>
+    <string name="refresh">Refresh</string>
+    <string name="no_device_found">No device found</string>
+    <string name="connecting">Connecting…</string>
+    <string name="waiting">Waiting…</string>
+    <string name="exit_x">X</string>
+    <string name="no_devices_connected">No devices connected</string>
+    <string name="bluetooth_devices">Bluetooth Devices</string>
 </resources>
