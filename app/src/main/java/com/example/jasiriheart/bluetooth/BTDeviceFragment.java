@@ -1,6 +1,5 @@
 package com.example.jasiriheart.bluetooth;
 
-import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,29 +12,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import com.example.jasiriheart.R;
 import com.example.jasiriheart.data.Constants;
 import com.example.jasiriheart.common.OnRecyclerViewInteractedListener;
-import com.example.jasiriheart.bluetooth.BTDeviceAdapter;
 import com.example.jasiriheart.databinding.FragmentBtDeviceBinding;
-//import app.util.DialogUtil;
-//import app.util.Utility;
 
 public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteractedListener {
     private static final String TAG = "BT Fragment";
@@ -73,11 +66,6 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
         setHasOptionsMenu(true);
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-//        if(btAdapter == null) {
-//            DialogUtil.promptBluetoothNotAvailable(getContext());
-//        } else {
-//            enableBluetooth();
-//        }
     }
 
     @Nullable
@@ -92,7 +80,6 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
 
         binding.rvBtDevices.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvBtDevices.setAdapter(btDeviceAdapter);
-
 
         refreshPairDevices();
         return view;
@@ -142,39 +129,9 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
         if (btAdapter == null){
             return;
         }
-//        if (!btAdapter.isEnabled()){
-//            enableBluetooth();
-//            return;
-//        }
         refreshPairDevices();
         doScanningDevices();
-//        checkPermissionForScanDevice();
     }
-
-//    private void enableBluetooth(){   //enabled in SettingsFragment()
-//        if (!btAdapter.isEnabled()){
-//            Intent intent = IntentBuilder.enableBluetooth();
-//            startActivityForResult(intent, Constants.REQUEST_ENABLE_BT);
-//        }
-//    }
-
-//    private void disableBluetooth(){
-//        if (btAdapter.isEnabled()){
-//            btAdapter.disable();
-//        }
-//    }
-
-//    private void enableDiscoverable(){
-//        if (btAdapter== null){
-//            return;
-//        }
-//
-//        if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-//            startActivityForResult(IntentBuilder.enableBtDiscoverable(), Constants.REQUEST_DISCOVER_BT);
-//        } else {
-//            showToast(getString(R.string.discoverable_running));
-//        }
-//    }
 
     private void refreshPairDevices() {
         if (btAdapter ==null){
@@ -186,7 +143,6 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
             btDeviceAdapter.setDevicesPaired(set);
         }
     }
-
 
     private BtDeviceFoundReceiver deviceFoundReceiver;
     private void doEndScanning(){
@@ -219,7 +175,19 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
         btAdapter.startDiscovery();
     }
 
-//    private void checkPermissionForScanDevice(){  //permissions asked at start alr
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (btAdapter.isEnabled()) {
+                    refreshPairDevices();
+                }
+            }
+        }
+    }
+
+//    private void checkPermissionForScanDevice(){
 //        if (Utility.checkPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
 //            doScanningDevices();
 //        } else {
@@ -233,39 +201,27 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
 //        }
 //    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (btAdapter.isEnabled()) {
-                    refreshPairDevices();
-                }
-            }
-        }
-    }
-
+    //TODO: check when refresh
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        ArrayList<String> granted = new ArrayList<>();
-//        ArrayList<String> denied  = new ArrayList<>();
-//        String permission;
-//        for (int i=0; i<permissions.length; i++){
-//            permission = permissions[i];
-//            if (grantResults[i] == PackageManager.PERMISSION_GRANTED){
-//                granted.add(permission);
-//            } else {
-//                denied.add(permission);
-//            }
-//        }
-//        MdpLog.d(TAG, String.format("request(%d), granted(%d), denied(%d)", requestCode, granted.size(), denied.size()));
-//
-//        // check permission result for scanning
-//        if (requestCode == Constants.REQUEST_LOCATION_PERMISSION) {
-//            if (grantResults.length>0 && denied.size() == 0 ) {
-//                doScanningDevices();
-//            }
-//        }
+        ArrayList<String> granted = new ArrayList<>();
+        ArrayList<String> denied  = new ArrayList<>();
+        String permission;
+        for (int i=0; i<permissions.length; i++){
+            permission = permissions[i];
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED){
+                granted.add(permission);
+            } else {
+                denied.add(permission);
+            }
+        }
+
+        // check permission result for scanning
+        if (requestCode == Constants.REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length>0 && denied.size() == 0 ) {
+                doScanningDevices();
+            }
+        }
 
         if (requestCode == Constants.REQUEST_LOCATION_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){

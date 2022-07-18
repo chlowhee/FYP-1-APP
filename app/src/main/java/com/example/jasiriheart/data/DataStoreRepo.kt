@@ -15,19 +15,19 @@ class DataStoreRepo(
     private val dataStore: DataStore<Preferences>
 ){
 
-    private val keyIsBluetoothConnected = booleanPreferencesKey("bluetooth_on")
+    private val keyIsBluetoothOn = booleanPreferencesKey("bluetooth_on")
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    val bluetoothActive: LiveData<Boolean> = liveData {
+    val bluetoothIsActive: LiveData<Boolean> = liveData {
         dataStore.data.collect {
-            emit(it[keyIsBluetoothConnected] ?: false)
+            emit(it[keyIsBluetoothOn] ?: false)
         }
     }
 
-    fun setBluetoothIsConnected(toggle: Boolean) {
+    fun setBluetoothIsOn(toggle: Boolean) {
         coroutineScope.launch {
             dataStore.edit { settings ->
-                settings[keyIsBluetoothConnected] = toggle
+                settings[keyIsBluetoothOn] = toggle
             }
         }
     }

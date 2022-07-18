@@ -16,6 +16,8 @@
     <string name="discovering">Discovering (%1$d) …</string>
     <string name="refresh">Refresh</string>
     <string name="no_device_found">No device found</string>
+    <string name="connecting">Connecting…</string>
+    <string name="waiting">Waiting…</string>
 
     <string name="device_name">Nexus 5</string>
     <string name="device_address">78:F8:82:9F:F1:D6</string>

@@ -15,7 +15,6 @@ import java.util.Collection;
 import com.example.jasiriheart.R;
 import com.example.jasiriheart.common.OnRecyclerViewInteractedListener;
 
-
 public class BTDeviceAdapter extends RecyclerView.Adapter {
     private static int VIEW_TYPE_INFO = 0;
     private static int VIEW_TYPE_DEVICE = 1;
@@ -109,7 +108,6 @@ public class BTDeviceAdapter extends RecyclerView.Adapter {
         }
     }
 
-
     public class InfoViewHolder extends RecyclerView.ViewHolder{
         TextView tvTextMain;
         public InfoViewHolder(@NonNull View view) {
@@ -137,7 +135,6 @@ public class BTDeviceAdapter extends RecyclerView.Adapter {
             }
         }
     }
-
 
     public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         View view;

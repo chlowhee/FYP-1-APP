@@ -5,6 +5,6 @@ package com.example.jasiriheart.common;
 public interface BluetoothStatusListener {
     void onStateChanges(int state);
 //    void onCommunicate(MDPMessage message);
-    void onToastMessage(String message);
+//    void onToastMessage(String message);
 
 }

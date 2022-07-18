@@ -1,5 +1,6 @@
 package com.example.jasiriheart.bluetooth;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -10,8 +11,6 @@ import java.util.ArrayList;
 
 import com.example.jasiriheart.common.BluetoothStatusListener;
 import com.example.jasiriheart.data.Constants;
-import com.example.jasiriheart.bluetooth.BluetoothChatService;
-//import app.entity.MDPMessage;
 
 public class BluetoothController {
     BluetoothChatService service;
@@ -20,7 +19,7 @@ public class BluetoothController {
     ArrayList<BluetoothStatusListener> listeners;
 
     public BluetoothController(Context context){
-        this.service = new BluetoothChatService(context);
+        this.service = new BluetoothChatService(context, mHandler);
         this.listeners = new ArrayList<>();
         this.btAdapter = BluetoothAdapter.getDefaultAdapter();
     }
@@ -117,19 +116,16 @@ public class BluetoothController {
         }
     }
 
-
-
-/* dun nd this */
-
-//    private final Handler mHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what) {
-//                case Constants.MESSAGE_STATE_CHANGE:
-//                    for (BluetoothStatusListener listener: listeners){
-//                        listener.onStateChanges(msg.arg1);
-//                    }
-//                    break;
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    for (BluetoothStatusListener listener: listeners){
+                        listener.onStateChanges(msg.arg1);
+                    }
+                    break;
 //                case Constants.MESSAGE_WRITE:
 //                    try{
 //                        byte[] writeBuf = (byte[]) msg.obj;
@@ -151,16 +147,16 @@ public class BluetoothController {
 //                        listener.onCommunicate(inMessage);
 //                    }
 //                    break;
-//                case Constants.MESSAGE_DEVICE_NAME:
-//                    // save the connected device's name
-//                    connectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
-//                    break;
+                case Constants.MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    connectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+                    break;
 //                case Constants.MESSAGE_TOAST:
 //                    for (BluetoothStatusListener listener: listeners){
 //                        listener.onToastMessage( msg.getData().getString(Constants.TOAST));
 //                    }
 //                    break;
-//            }
-//        }
-//    };
+            }
+        }
+    };
 }
