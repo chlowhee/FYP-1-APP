@@ -139,14 +139,14 @@ public class BluetoothController {
 //                    }
 //
 //                    break;
-//                case Constants.MESSAGE_READ:
-//                    // read message object instead of buffer
-//                    String strMsg = (String) msg.obj;
-//                    MDPMessage inMessage = new MDPMessage(MDPMessage.Type.INCOMING, getConnectedDeviceName(), strMsg);
-//                    for (BluetoothStatusListener listener: listeners){
-//                        listener.onCommunicate(inMessage);
-//                    }
-//                    break;
+                case Constants.MESSAGE_READ:
+                    // read message object instead of buffer
+                    String strMsg = (String) msg.obj;
+                    String inMessage = strMsg;
+                    for (BluetoothStatusListener listener: listeners){
+                        listener.onCommunicate(inMessage);
+                    }
+                    break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     connectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);

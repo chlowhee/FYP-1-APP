@@ -30,6 +30,8 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
     private lateinit var bAdapter:BluetoothAdapter
     @Inject lateinit var dataStoreRepo: DataStoreRepo
     private val controller = BluetoothController(activity)
+    private var address = ""
+    private var btConnected = false
 
     private val TAG = "Settings Frag"
 
@@ -89,11 +91,23 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
     override fun onStateChanges(state: Int) {
         binding.getPairedStatus.run {
             when (state) {
-                BluetoothChatService.STATE_CONNECTED -> text = "Connected: " + controller.connectedDeviceName
+                BluetoothChatService.STATE_CONNECTED -> {
+                    text = "Connected: " + controller.connectedDeviceName
+                    btConnected = true
+                }
                 BluetoothChatService.STATE_CONNECTING -> text = getString(R.string.connecting)
                 BluetoothChatService.STATE_LISTEN -> text = getString(R.string.waiting)
-                BluetoothChatService.STATE_NONE -> text = getString(R.string.no_devices_connected)
+                BluetoothChatService.STATE_NONE -> {
+                    text = getString(R.string.no_devices_connected)
+                    btConnected = false
+                }
             }
+        }
+    }
+
+    override fun onCommunicate(message: String?) {
+        when (message) {
+            "K" -> Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -110,17 +124,27 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
             Constants.REQUEST_PICK_BT_DEVICE ->
                 if (resultCode == Activity.RESULT_OK) {
                     // connect to device
-                    val address = data!!.extras!!.getString(Constants.EXTRA_DEVICE_ADDRESS)
+                    address = data!!.extras!!.getString(Constants.EXTRA_DEVICE_ADDRESS).toString()
                     Log.d(TAG, "pick bt device $address")
                     controller.connectDevice(address, true)
                 }
             else -> {
-                Log.d(TAG, "what request code?")}
+                Log.d(TAG, "what request code?")
+            }
         }
+    }
+
+    private fun reconnectDevice(addr: String) {
+        Log.d(TAG, "reconnecting device")
+        controller.stopService()
+        controller.connectDevice(addr, true)
     }
 
     private fun connectBT() {
         binding.bluetoothConnect.setOnClickListener{
+            if (btConnected) {
+                reconnectDevice(address)
+            }
             if (bAdapter.isEnabled) {
                 val intent = Intent(activity, DynamicActivity::class.java)
                 startActivityForResult(intent, Constants.REQUEST_PICK_BT_DEVICE)
