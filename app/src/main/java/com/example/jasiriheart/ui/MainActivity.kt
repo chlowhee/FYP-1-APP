@@ -1,9 +1,11 @@
 package com.example.jasiriheart.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -28,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val settingsFrag = SettingsFragment()
+    private val studyFrag = StudyFragment()
+    private val homeFrag = HomeFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         setCurrentFragment(settingsFrag)
 
         checkAndRequestPermissions()
+        bottomNavSelect()
     }
 
     /**
@@ -77,20 +82,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Sets the current fragment shown on the MainActivity
+     */
     private fun setCurrentFragment(fragment: Fragment) {
-        val fragMgr = supportFragmentManager
-
-        fragMgr.beginTransaction().apply{
+        supportFragmentManager.beginTransaction().apply{
             replace(R.id.flFragment, fragment)
             commit()
         }
     }
 
+    /**
+     * Bottom Navigation Tool to change fragment
+     */
     private fun bottomNavSelect() {
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-//                R.id.study -> setCurrentFragment(firstFragment)
-//                R.id.home -> setCurrentFragment(secondFragment)
+                R.id.study -> setCurrentFragment(studyFrag)
+                R.id.home -> setCurrentFragment(homeFrag)
                 R.id.settings -> setCurrentFragment(settingsFrag)
 
             }

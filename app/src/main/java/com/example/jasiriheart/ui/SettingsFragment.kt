@@ -92,7 +92,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
         binding.getPairedStatus.run {
             when (state) {
                 BluetoothChatService.STATE_CONNECTED -> {
-                    text = "Connected: " + controller.connectedDeviceName
+                    text = "Connected: " //+ controller.connectedDeviceName
                     btConnected = true
                 }
                 BluetoothChatService.STATE_CONNECTING -> text = getString(R.string.connecting)
@@ -105,9 +105,13 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCommunicate(message: String?) {
         when (message) {
-            "K" -> Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
+            "K" -> {
+                Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
+                binding.getPairedStatus.text = "Connected: " + controller.connectedDeviceName
+            }
         }
     }
 
@@ -159,7 +163,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
      */
     private fun initTestBtn(){
         binding.testBtn.setOnClickListener{
-            controller.sendMessage("GG")
+            controller.sendMessage("A") //fwd cmd in mBot
         }
     }
 
