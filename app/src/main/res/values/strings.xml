@@ -28,5 +28,12 @@
     <string name="study_title">How do you want Jasiri to accompany you?</string>
     <string name="pomodoro_method">Pomodoro Method</string>
     <string name="getting_things_done_method">Getting Things Done Method</string>
-    <string name="force_start">Force Start</string>
+    <string name="force_start_methos">Force Start</string>
+    <string name="pomodoro_title">POMODORO</string>
+    <string name="time_to_focus">Time to focus!</string>
+    <string name="time_for_a_break_xd">Time for a break XD</string>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="force_start">FORCE START</string>
+    <string name="jump_start_your_brain">Jump start your brain!</string>
 </resources>
