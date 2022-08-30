@@ -1,4 +1,4 @@
-package com.example.jasiriheart.utils
+package com.example.jasiribrain.utils
 
 import android.content.Context
 import android.content.pm.PackageManager

@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.jasiriheart"
+        applicationId "com.example.jasiribrain"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1

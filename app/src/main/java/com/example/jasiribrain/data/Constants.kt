@@ -1,4 +1,4 @@
-package com.example.jasiriheart.data
+package com.example.jasiribrain.data
 
 interface Constants {
     companion object {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.jasiriheart">
+    package="com.example.jasiribrain">
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
@@ -16,10 +16,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.JasiriHeart"
+        android:theme="@style/Theme.JasiriBrain"
         android:exported="true"
-        android:name = ".MainApplication">
-        <activity android:name=".ui.MainActivity"
+        android:name = "com.example.jasiribrain.MainApplication">
+        <activity android:name="com.example.jasiribrain.ui.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.DynamicActivity"
+            android:name="com.example.jasiribrain.ui.DynamicActivity"
             android:screenOrientation="portrait" />
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.jasiriheart.ui
+package com.example.jasiribrain.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -11,13 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.jasiriheart.R
-import com.example.jasiriheart.bluetooth.BluetoothChatService
-import com.example.jasiriheart.bluetooth.BluetoothController
-import com.example.jasiriheart.common.BluetoothStatusListener
-import com.example.jasiriheart.data.Constants
-import com.example.jasiriheart.data.DataStoreRepo
-import com.example.jasiriheart.databinding.FragmentSettingsBinding
+import com.example.jasiribrain.R
+import com.example.jasiribrain.bluetooth.BluetoothChatService
+import com.example.jasiribrain.bluetooth.BluetoothController
+import com.example.jasiribrain.common.BluetoothStatusListener
+import com.example.jasiribrain.data.Constants
+import com.example.jasiribrain.data.DataStoreRepo
+import com.example.jasiribrain.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -1,22 +1,22 @@
-package com.example.jasiriheart.ui
+package com.example.jasiribrain.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.jasiriheart.databinding.FragStudyPomodoroBinding
+import com.example.jasiribrain.databinding.FragStudyForceStartBinding
 
-class PomodoroStudyFrag: Fragment() {
+class ForceStartStudyFrag: Fragment() {
 
-    private var _binding: FragStudyPomodoroBinding? = null
+    private var _binding: FragStudyForceStartBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragStudyPomodoroBinding.inflate(inflater, container, false)
+        _binding = FragStudyForceStartBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -24,6 +24,6 @@ class PomodoroStudyFrag: Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    //TODO: custom countdown timer but default 25 mins
+    //TODO: 2 MIN countdown timer
 
 }

@@ -1,12 +1,12 @@
-package com.example.jasiriheart.ui
+package com.example.jasiribrain.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.jasiriheart.R
-import com.example.jasiriheart.databinding.FragmentStudyBinding
+import com.example.jasiribrain.R
+import com.example.jasiribrain.databinding.FragmentStudyBinding
 
 class StudyFragment: Fragment() {
 
@@ -14,7 +14,7 @@ class StudyFragment: Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var pomodoroStudyFrag: PomodoroStudyFrag
-    private lateinit var forceStartStudyFrag: ForceStartStudyFrag
+    private val forceStartStudyFrag = ForceStartStudyFrag()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -1,4 +1,4 @@
-package com.example.jasiriheart.bluetooth;
+package com.example.jasiribrain.bluetooth;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -9,8 +9,8 @@ import android.os.Message;
 
 import java.util.ArrayList;
 
-import com.example.jasiriheart.common.BluetoothStatusListener;
-import com.example.jasiriheart.data.Constants;
+import com.example.jasiribrain.common.BluetoothStatusListener;
+import com.example.jasiribrain.data.Constants;
 
 public class BluetoothController {
     BluetoothChatService service;

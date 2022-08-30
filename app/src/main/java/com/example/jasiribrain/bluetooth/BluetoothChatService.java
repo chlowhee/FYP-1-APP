@@ -1,4 +1,4 @@
-package com.example.jasiriheart.bluetooth;
+package com.example.jasiribrain.bluetooth;
 
 /* THIS CLASS IS ADOPTED FROM android-BluetoothChat repository
  * URL: https://github.com/googlearchive/android-BluetoothChat
@@ -27,7 +27,7 @@ import android.os.Message;
 import android.util.Log;
 import android.os.Handler;
 
-import com.example.jasiriheart.data.Constants;
+import com.example.jasiribrain.data.Constants;
 
 import java.io.IOException;
 import java.io.InputStream;

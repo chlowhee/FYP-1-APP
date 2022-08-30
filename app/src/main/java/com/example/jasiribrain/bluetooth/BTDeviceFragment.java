@@ -1,4 +1,4 @@
-package com.example.jasiriheart.bluetooth;
+package com.example.jasiribrain.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -25,10 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Set;
 
-import com.example.jasiriheart.R;
-import com.example.jasiriheart.data.Constants;
-import com.example.jasiriheart.common.OnRecyclerViewInteractedListener;
-import com.example.jasiriheart.databinding.FragmentBtDeviceBinding;
+import com.example.jasiribrain.R;
+import com.example.jasiribrain.data.Constants;
+import com.example.jasiribrain.common.OnRecyclerViewInteractedListener;
+import com.example.jasiribrain.databinding.FragmentBtDeviceBinding;
 
 public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteractedListener {
     private static final String TAG = "BT Fragment";

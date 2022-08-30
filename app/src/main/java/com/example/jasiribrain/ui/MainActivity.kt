@@ -1,18 +1,15 @@
-package com.example.jasiriheart.ui
+package com.example.jasiribrain.ui
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.jasiriheart.R
-import com.example.jasiriheart.data.Constants
-import com.example.jasiriheart.databinding.ActivityMainBinding
-import com.example.jasiriheart.utils.getMissingPermissions
+import com.example.jasiribrain.R
+import com.example.jasiribrain.databinding.ActivityMainBinding
+import com.example.jasiribrain.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
 
 private val REQUIRED_PERMISSION_LIST = arrayOf(

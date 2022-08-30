@@ -1,11 +1,11 @@
-package com.example.jasiriheart.ui
+package com.example.jasiribrain.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.example.jasiriheart.R
-import com.example.jasiriheart.bluetooth.BTDeviceFragment
-import com.example.jasiriheart.databinding.ActivityDynamicBinding
+import com.example.jasiribrain.R
+import com.example.jasiribrain.bluetooth.BTDeviceFragment
+import com.example.jasiribrain.databinding.ActivityDynamicBinding
 
 class DynamicActivity : AppCompatActivity() {
 

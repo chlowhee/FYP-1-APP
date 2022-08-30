@@ -1,11 +1,11 @@
-package com.example.jasiriheart.ui
+package com.example.jasiribrain.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.jasiriheart.databinding.FragmentHomeBinding
+import com.example.jasiribrain.databinding.FragmentHomeBinding
 
 class HomeFragment: Fragment() {
 

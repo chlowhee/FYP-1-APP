@@ -1,4 +1,4 @@
-package com.example.jasiriheart.bluetooth;
+package com.example.jasiribrain.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 import android.view.LayoutInflater;
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.example.jasiriheart.R;
-import com.example.jasiriheart.common.OnRecyclerViewInteractedListener;
+import com.example.jasiribrain.R;
+import com.example.jasiribrain.common.OnRecyclerViewInteractedListener;
 
 public class BTDeviceAdapter extends RecyclerView.Adapter {
     private static int VIEW_TYPE_INFO = 0;
