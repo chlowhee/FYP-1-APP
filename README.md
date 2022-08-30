@@ -2,4 +2,4 @@
 
 PROJECT JASIRI
 
-Android app. The heart of Jasiri
+Android app. The brain of Jasiri
