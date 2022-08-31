@@ -1,5 +1,6 @@
 package com.example.jasiribrain.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +21,18 @@ class ForceStartStudyFrag: Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.setOnTouchListener { _, _ -> true }
+
+        initForceStartExitBtn()
+    }
+
+    private fun initForceStartExitBtn() {
+        binding.forceStartExitBtn.setOnClickListener {
+            parentFragmentManager.beginTransaction().remove(this).commitNow()
+        }
     }
 
     //TODO: 2 MIN countdown timer

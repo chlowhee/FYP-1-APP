@@ -13,7 +13,7 @@ class StudyFragment: Fragment() {
     private var _binding: FragmentStudyBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var pomodoroStudyFrag: PomodoroStudyFrag
+    private val pomodoroStudyFrag = PomodoroStudyFrag()
     private val forceStartStudyFrag = ForceStartStudyFrag()
 
     override fun onCreateView(
@@ -26,13 +26,20 @@ class StudyFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pomodoroCheck()
+        studyMethodCheck()
     }
 
-    private fun pomodoroCheck() {
-        binding.pomodoroBtn.setOnClickListener {
-            //test
-            childFragmentManager.beginTransaction().replace(R.id.methodFragment, forceStartStudyFrag).setReorderingAllowed(true).commitNow()
+    private fun studyMethodCheck() {
+        binding.run {
+            pomodoroBtn.setOnClickListener { studyFragOpener(pomodoroStudyFrag) }
+            forceStartBtn.setOnClickListener { studyFragOpener(forceStartStudyFrag) }
+        }
+    }
+
+    private fun studyFragOpener(fragment: Fragment) {
+        childFragmentManager.beginTransaction().apply {
+            replace(R.id.methodFragment, fragment)
+            commitNow()
         }
     }
 

@@ -98,7 +98,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.study -> setCurrentFragment(studyFrag)
                 R.id.home -> setCurrentFragment(homeFrag)
                 R.id.settings -> setCurrentFragment(settingsFrag)
-
             }
             true
         }

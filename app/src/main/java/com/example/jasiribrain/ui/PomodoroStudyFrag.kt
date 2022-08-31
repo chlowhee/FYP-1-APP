@@ -1,5 +1,6 @@
 package com.example.jasiribrain.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +21,18 @@ class PomodoroStudyFrag: Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.setOnTouchListener { _, _ -> true }
+
+        initPomodoroExitBtn()
+    }
+
+    private fun initPomodoroExitBtn() {
+        binding.pomodoroExitBtn.setOnClickListener {
+            parentFragmentManager.beginTransaction().remove(this).commitNow()
+        }
     }
 
     //TODO: custom countdown timer but default 25 mins

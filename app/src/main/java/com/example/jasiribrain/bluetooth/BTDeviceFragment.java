@@ -120,7 +120,7 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
     }
 
     private void initExitBtn() {
-        binding.exitBtn.setOnClickListener(v ->
+        binding.btDeviceExitBtn.setOnClickListener(v ->
                 requireActivity().finish()
             );
     }
