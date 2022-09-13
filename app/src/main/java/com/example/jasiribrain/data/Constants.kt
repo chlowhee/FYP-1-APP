@@ -6,6 +6,7 @@ interface Constants {
         const val MESSAGE_INTERVAL_MS = 1000
         const val MAP_UPDATE_INTERVAL_MS = 1500
         const val BT_RECONNECT_INTERVAL_MS = 5000
+        const val FORCE_START_TIME_MS: Long = 120000
 
         // request codes
         const val REQUEST_ENABLE_BT = 1001

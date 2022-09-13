@@ -49,7 +49,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
 
         bAdapter = BluetoothAdapter.getDefaultAdapter()
 
-        if (bAdapter.isEnabled) {dataStoreRepo.setBluetoothIsOn(true)}
+        if (bAdapter.isEnabled) {dataStoreRepo.setBluetoothIsActive(true)}
         controller.registerListener(this)
         onStateChanges(controller.getState())
 
@@ -80,7 +80,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                 } else {
 //                turn off BT
                     bAdapter.disable()
-                    dataStoreRepo.setBluetoothIsOn(false)
+                    dataStoreRepo.setBluetoothIsActive(false)
                     Toast.makeText(activity, "Bluetooth is turned off", Toast.LENGTH_LONG).show()
                 }
             }
@@ -121,7 +121,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
             Constants.REQUEST_ENABLE_BT ->
                 if (resultCode == Activity.RESULT_OK) {
                     if (bAdapter.isEnabled) {
-                        dataStoreRepo.setBluetoothIsOn(true)
+                        dataStoreRepo.setBluetoothIsActive(true)
                         Toast.makeText(activity, "Bluetooth is on", Toast.LENGTH_LONG).show()
                     }
                 }

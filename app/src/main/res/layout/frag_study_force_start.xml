@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/jump_start_your_brain"
-        android:textSize="25sp"
+        android:textSize="30sp"
         android:textStyle="italic"
         android:textColor="@color/black"
         android:gravity="center"
@@ -36,8 +36,8 @@
         android:id="@+id/force_start_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="02:00"
-        android:textSize="40sp"
+        android:text="@string/min_2"
+        android:textSize="60sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,9 +45,9 @@
         app:layout_constraintTop_toBottomOf="@id/jump_start_your_brain_title"/>
 
     <Button
-        android:id="@+id/force_start"
-        android:layout_width="100dp"
-        android:layout_height="55dp"
+        android:id="@+id/timer_start_button"
+        android:layout_width="120dp"
+        android:layout_height="65dp"
         android:backgroundTint="@color/silver"
         android:text="@string/start"
         android:textColor="@color/black"
@@ -66,4 +66,15 @@
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/force_star_tester"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:backgroundTint="@color/silver"
+        android:text="testcmd"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,12 +5,14 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.jasiribrain.R
 import com.example.jasiribrain.databinding.ActivityMainBinding
 import com.example.jasiribrain.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
+import com.example.jasiribrain.data.JasiriDataHolder
 
 private val REQUIRED_PERMISSION_LIST = arrayOf(
     Manifest.permission.BLUETOOTH,
@@ -94,10 +96,14 @@ class MainActivity : AppCompatActivity() {
      */
     private fun bottomNavSelect() {
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.study -> setCurrentFragment(studyFrag)
-                R.id.home -> setCurrentFragment(homeFrag)
-                R.id.settings -> setCurrentFragment(settingsFrag)
+            if (JasiriDataHolder.studyActiveStatus.value == false) {
+                when (it.itemId) {
+                    R.id.study -> setCurrentFragment(studyFrag)
+                    R.id.home -> setCurrentFragment(homeFrag)
+                    R.id.settings -> setCurrentFragment(settingsFrag)
+                }
+            } else {
+                Toast.makeText(this, "Cannot exit while timer is running", Toast.LENGTH_LONG).show()
             }
             true
         }

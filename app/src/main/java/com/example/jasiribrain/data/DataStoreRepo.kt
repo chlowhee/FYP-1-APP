@@ -24,7 +24,7 @@ class DataStoreRepo(
         }
     }
 
-    fun setBluetoothIsOn(toggle: Boolean) {
+    fun setBluetoothIsActive(toggle: Boolean) {
         coroutineScope.launch {
             dataStore.edit { settings ->
                 settings[keyIsBluetoothOn] = toggle
