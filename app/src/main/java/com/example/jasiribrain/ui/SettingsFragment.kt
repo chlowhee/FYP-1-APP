@@ -17,6 +17,9 @@ import com.example.jasiribrain.bluetooth.BluetoothController
 import com.example.jasiribrain.common.BluetoothStatusListener
 import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.DataStoreRepo
+import com.example.jasiribrain.data.JasiriDataHolder
+import com.example.jasiribrain.data.JasiriViewModel
+//import androidx.fragment.app.viewModels
 import com.example.jasiribrain.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -29,7 +32,8 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
 
     private lateinit var bAdapter:BluetoothAdapter
     @Inject lateinit var dataStoreRepo: DataStoreRepo
-    private val controller = BluetoothController(activity)
+    @Inject lateinit var controller: BluetoothController
+
     private var address = ""
     private var btConnected = false
 
@@ -63,10 +67,14 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
      *   BLUETOOTH
      */
     private fun initBTUi() {
-        dataStoreRepo.bluetoothIsActive.observe(viewLifecycleOwner, {
-            if (it) {binding.bluetoothOnOff.text = getString(R.string.on)}
-            else { binding.bluetoothOnOff.text = getString(R.string.off)}
-        })
+        dataStoreRepo.bluetoothIsActive.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.bluetoothOnOff.text = getString(R.string.on)
+            } else {
+                binding.bluetoothOnOff.text = getString(R.string.off)
+            }
+        }
+//        JasiriDataHolder.bluetoothActiveStatus.ob
     }
 
     @SuppressLint("SetTextI18n")
@@ -80,6 +88,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                 } else {
 //                turn off BT
                     bAdapter.disable()
+                    controller.stopService()
                     dataStoreRepo.setBluetoothIsActive(false)
                     Toast.makeText(activity, "Bluetooth is turned off", Toast.LENGTH_LONG).show()
                 }

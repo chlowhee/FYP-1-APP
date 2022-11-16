@@ -52,7 +52,7 @@
         android:layout_width="250dp"
         android:layout_height="100dp"
         android:backgroundTint="@color/silver"
-        android:text="@string/force_start"
+        android:text="@string/force_start_title"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/gtd_btn"

@@ -14,6 +14,15 @@ object JasiriDataHolder {
         _studyActiveStatus.value = status
     }
 
+    private val _studyMethodSelect = MutableStateFlow(Constants.NONE_STUDY_SEL)
+
+    val studyMethodSelect: StateFlow<Int>
+        get() = _studyMethodSelect
+
+    fun setStudyMethodSelect(status: Int) {
+        _studyMethodSelect.value = status
+    }
+
     private val _bluetoothActiveStatus = MutableStateFlow(false)
 
     val bluetoothActiveStatus: StateFlow<Boolean>

@@ -13,18 +13,22 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.jasiribrain.R
 import com.example.jasiribrain.bluetooth.BluetoothController
+import com.example.jasiribrain.common.BluetoothStatusListener
 import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.JasiriDataHolder
-import com.example.jasiribrain.databinding.FragStudyForceStartBinding
+import com.example.jasiribrain.databinding.FragStudyMethodsBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
-class ForceStartStudyFrag: Fragment() {
+@AndroidEntryPoint
+class StudyMethodFrag: Fragment() {
 
-    private var _binding: FragStudyForceStartBinding? = null
+    private var _binding: FragStudyMethodsBinding? = null
     private val binding get() = _binding!!
-    private val TAG = "forceStartStudyFrag"
+    private val TAG = "studyMethodsFrag"
 
-    private val controller = BluetoothController(activity)
+    @Inject lateinit var controller: BluetoothController
 
     private lateinit var mCountDownTimer: CountDownTimer
     private var mTimeLeftMillis = Constants.FORCE_START_TIME_MS
@@ -34,7 +38,7 @@ class ForceStartStudyFrag: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragStudyForceStartBinding.inflate(inflater, container, false)
+        _binding = FragStudyMethodsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,16 +47,42 @@ class ForceStartStudyFrag: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         view.setOnTouchListener { _, _ -> true }
 
-        initForceStartExitBtn()
+        studyMethodUiInit()
+        initStudyMethodExitBtn()
         timeStartInit()
         testbtnInit()
     }
 
-    private fun initForceStartExitBtn() {
-        binding.forceStartExitBtn.setOnClickListener {
-            Log.d(TAG, "exitBtnClicked. studyIsActive: " + JasiriDataHolder.studyActiveStatus.value)
+    private fun studyMethodUiInit() {
+        val sel = JasiriDataHolder.studyMethodSelect.value
+        binding.run {
+            when (sel) {
+                Constants.POMODORO_SEL -> {
+                    studyMethodTitle.text = getString(R.string.pomodoro_title)
+                    descriptorinator.text = getString(R.string.time_to_focus)
+                    cyclesLeftDescript.visibility = View.VISIBLE
+                    timerSettings.visibility = View.VISIBLE
+                }
+                Constants.GTD_SEL -> {
+                    studyMethodTitle.text = getString(R.string.gtd_title)
+                    descriptorinator.text = getString(R.string.time_to_focus)
+                    cyclesLeftDescript.visibility = View.VISIBLE
+                    timerSettings.visibility = View.INVISIBLE
+                }
+                Constants.FORCE_START_SEL -> {
+                    studyMethodTitle.text = getString(R.string.force_start_title)
+                    descriptorinator.text = getString(R.string.jump_start_your_brain)
+                    cyclesLeftDescript.visibility = View.INVISIBLE
+                    timerSettings.visibility = View.INVISIBLE
+                }
+            }
+        }
+    }
+
+    private fun initStudyMethodExitBtn() {
+        binding.studyMethodExitBtn.setOnClickListener {
             if (JasiriDataHolder.studyActiveStatus.value) {
-                Toast.makeText(activity, "Cannot exit while timer is running", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Cannot exit while timer is running", Toast.LENGTH_SHORT).show()
             } else {
                 parentFragmentManager.beginTransaction().remove(this).commitNow()
             }
@@ -68,6 +98,12 @@ class ForceStartStudyFrag: Fragment() {
                     stopTimer()
                 }
             }
+        }
+    }
+
+    private fun timerSettingsInit() {
+        binding.timerSettings.setOnClickListener {
+
         }
     }
 
@@ -87,13 +123,13 @@ class ForceStartStudyFrag: Fragment() {
             }
         }.start()
         JasiriDataHolder.setStudyIsActiveStatus(true)
-        Log.d(TAG, "timer started. studyIsActive: " + JasiriDataHolder.studyActiveStatus)
+        Log.d(TAG, "timer started")
         binding.timerStartButton.text = getString(R.string.stop)
     }
 
     private fun stopTimer() {
         mCountDownTimer.cancel()    //pause timer
-        stopAlertDialogInit()
+        timerStopAlertDialogInit()
     }
 
     private fun updateCountDownText() {
@@ -101,16 +137,16 @@ class ForceStartStudyFrag: Fragment() {
         val seconds = (mTimeLeftMillis/1000).toInt() % 60
 
         val timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-        binding.forceStartTimer.text = timeLeftFormatted
+        binding.studyTimer.text = timeLeftFormatted
     }
 
-    private fun stopAlertDialogInit() {
+    private fun timerStopAlertDialogInit() {
         builder = AlertDialog.Builder(activity)
         builder!!.setMessage("Are you sure you wanna stop?")
             .setTitle(R.string.bad_cop_1)
             .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
                 JasiriDataHolder.setStudyIsActiveStatus(false)
-                Log.d(TAG, "timer stopped. studyIsActive: " + JasiriDataHolder.studyActiveStatus.value)
+                Log.d(TAG, "timer stopped")
                 binding.timerStartButton.text = getString(R.string.start)
                 mTimeLeftMillis = Constants.FORCE_START_TIME_MS
                 updateCountDownText()

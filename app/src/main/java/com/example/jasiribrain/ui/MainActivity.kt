@@ -4,15 +4,21 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import com.example.jasiribrain.R
 import com.example.jasiribrain.databinding.ActivityMainBinding
 import com.example.jasiribrain.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.jasiribrain.data.JasiriDataHolder
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import com.example.jasiribrain.bluetooth.BluetoothController
+import com.example.jasiribrain.data.JasiriViewModel
 
 private val REQUIRED_PERMISSION_LIST = arrayOf(
     Manifest.permission.BLUETOOTH,
@@ -31,6 +37,9 @@ class MainActivity : AppCompatActivity() {
     private val settingsFrag = SettingsFragment()
     private val studyFrag = StudyFragment()
     private val homeFrag = HomeFragment()
+    private lateinit var currFrag: Fragment
+
+    private val viewModel: JasiriViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +49,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.bottomNavigationView.menu.findItem(R.id.settings).isChecked = true
-        setCurrentFragment(settingsFrag)
+//        setCurrentFragment(settingsFrag)
+        supportFragmentManager.beginTransaction().replace(R.id.settings_fragment, settingsFrag).commit()
+
 
         checkAndRequestPermissions()
         bottomNavSelect()
+        bottomNavEnabled()
     }
 
     /**
@@ -98,14 +110,27 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             if (JasiriDataHolder.studyActiveStatus.value == false) {
                 when (it.itemId) {
-                    R.id.study -> setCurrentFragment(studyFrag)
-                    R.id.home -> setCurrentFragment(homeFrag)
-                    R.id.settings -> setCurrentFragment(settingsFrag)
+                    R.id.study -> {
+                        setCurrentFragment(studyFrag)
+                        currFrag = studyFrag
+                    }
+                    R.id.home -> {
+                        setCurrentFragment(homeFrag)
+                        currFrag = homeFrag
+                    }
+                    R.id.settings -> supportFragmentManager.beginTransaction().remove(currFrag).commitNow()
                 }
-            } else {
-                Toast.makeText(this, "Cannot exit while timer is running", Toast.LENGTH_LONG).show()
             }
             true
+        }
+    }
+
+    private fun bottomNavEnabled() {
+        viewModel.isStudyingStatus.observe(this) { yes ->
+            binding.bottomNavigationView.apply {
+                if (yes) menu.forEach { it.isEnabled = false }
+                else menu.forEach { it.isEnabled = true }
+            }
         }
     }
 

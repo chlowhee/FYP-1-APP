@@ -6,7 +6,6 @@ interface Constants {
         const val MESSAGE_INTERVAL_MS = 1000
         const val MAP_UPDATE_INTERVAL_MS = 1500
         const val BT_RECONNECT_INTERVAL_MS = 5000
-        const val FORCE_START_TIME_MS: Long = 120000
 
         // request codes
         const val REQUEST_ENABLE_BT = 1001
@@ -30,5 +29,12 @@ interface Constants {
         // Key names received from the BluetoothChatService Handler
         const val DEVICE_NAME = "device_name"
         const val TOAST = "toast"
+
+        // Study methods
+        const val NONE_STUDY_SEL = 0
+        const val POMODORO_SEL = 1
+        const val GTD_SEL = 2
+        const val FORCE_START_SEL = 3
+        const val FORCE_START_TIME_MS: Long = 120000
     }
 }

@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -105,6 +106,7 @@ public class BluetoothController {
             byte[] send = message.getBytes();
             service.write(send);
         }
+        Log.d("FML", "msg sent");
     }
 
     /**
