@@ -159,7 +159,7 @@ class StudyMethodFrag: Fragment() {
 
     private fun testbtnInit() {
         binding.forceStarTester.setOnClickListener {
-            controller.sendMessage("A")
+            controller.sendMessage(Constants.FWD)
         }
     }
 

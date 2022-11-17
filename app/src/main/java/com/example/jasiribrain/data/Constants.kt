@@ -36,5 +36,11 @@ interface Constants {
         const val GTD_SEL = 2
         const val FORCE_START_SEL = 3
         const val FORCE_START_TIME_MS: Long = 120000
+
+        //Commands to mBot
+        const val FWD = "A"
+        const val BWD = "B"
+        const val RIGHT = "C"
+        const val LEFT = "D"
     }
 }

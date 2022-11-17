@@ -69,6 +69,9 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.5.1"
     implementation "androidx.fragment:fragment-ktx:1.5.2"
 
+    //joystick
+    implementation "io.github.controlwear:virtualjoystick:1.10.1"
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
