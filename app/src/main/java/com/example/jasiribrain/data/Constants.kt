@@ -38,6 +38,8 @@ interface Constants {
         const val FORCE_START_TIME_MS: Long = 120000
 
         //Commands to mBot
+        const val DEFAULT = "default"
+        const val STOP = "Z"
         const val FWD = "A"
         const val BWD = "B"
         const val RIGHT = "C"

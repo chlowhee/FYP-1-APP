@@ -1,15 +1,21 @@
 package com.example.jasiribrain.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.jasiribrain.bluetooth.BluetoothController
 import com.example.jasiribrain.data.Constants
+import com.example.jasiribrain.data.JasiriDataHolder
+import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.String
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -17,8 +23,13 @@ class HomeFragment: Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    val TAG = "homeFrag"
 
+    val viewModel: JasiriViewModel by viewModels()
     @Inject lateinit var controller: BluetoothController
+
+    private var prevCmd = Constants.DEFAULT
+    val threadHandler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,65 +41,90 @@ class HomeFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         joystickControllerInit()
+        jasiriMove()
+
+//        threadHandler.post { jasiriMove() }
     }
 
     private fun joystickControllerInit() {
         binding.joystickCtrl.setOnMoveListener { angle, strength ->
             binding.textViewAngleRight.text = "$angle°"
             binding.textViewStrengthRight.text = "$strength%"
-            binding.textViewCoordinateRight.text = jasiriMove(angle, strength)//"dir"
-//                String.format(
-//                "x%03d:y%03d",
-//                binding.joystickCtrl.normalizedX,
-//                binding.joystickCtrl.normalizedY
-//            )
+            binding.textViewCoordinateRight.text = joystickUpdate(angle, strength)
         }
     }
 
-    private fun jasiriMove(angle: Int, strength: Int):kotlin.String {
+    private fun joystickUpdate(angle: Int, strength: Int):String {
         //350-10 right 90   11-79: right 45
         //80-100 fwd        101 - 169 left 45
         //170-190 left 90  191 - 259 backleft
         //260-280 bwd      281 - 349 back right
         var dir = "dir"
         if (strength == 0) {    //so wun send R when re-centre
+            prevCmd = Constants.DEFAULT
             return dir
         }
-        if (angle in 11 until 80) { //fwd R 45
-            dir = "fwdR45"
-            return dir
-        }
-        if (angle in 80 until 101) {
-            dir = "fwd"
-            controller.sendMessage(Constants.FWD)
-            return dir
-        }
-        if (angle in 101 until 170) {
-            dir = "fwdL45"
-            return dir
-        }
-        if (angle in 170 until 191) {
-            dir = "L"
-            return dir
-        }
-        if (angle in 191 until 260) {
-            dir = "bwdL45"
-            return dir
-        }
-        if (angle in 260 until 281) {
-            dir = "bwd"
-            return dir
-        }
-        if (angle in 281 until 350) {
-            dir = "bwdR45"
-            return dir
-        }
-        if (angle in 350 until 360 || angle in 0 until 11) {
-            dir = "R"
-            return dir
+        when (angle) {
+            in 11..79 -> {
+                dir = "fwdR45"
+            }
+            in 80..100 -> {
+                dir = "fwd"
+                JasiriDataHolder.setJoystickCmdToSend(Constants.FWD)
+            }
+            in 101..169 -> {
+                dir = "fwdL45"
+            }
+            in 170..190 -> {
+                dir = "L"
+                JasiriDataHolder.setJoystickCmdToSend(Constants.LEFT)
+            }
+            in 191..259 -> {
+                dir = "bwdL45"
+            }
+            in 260..280 -> {
+                dir = "bwd"
+                JasiriDataHolder.setJoystickCmdToSend(Constants.BWD)
+            }
+            in 281..349 -> {
+                dir = "bwdR45"
+            }
+            in 350..359, in 0..10 -> {
+                dir = "R"
+                JasiriDataHolder.setJoystickCmdToSend(Constants.RIGHT)
+            }
         }
         return dir
     }
+
+    private fun jasiriMove() {
+        viewModel.getjoystickCmdStatus.observe(viewLifecycleOwner) { cmd ->
+            if (cmd != Constants.DEFAULT) {
+//                Log.d(TAG, "prev:current cmd = $prevCmd : $cmd")
+//                if (cmd == prevCmd) {
+//                    threadHandler.postDelayed(runnable, 1000)
+//                    Log.d(TAG, "after delay")
+//                }
+                //TODO WAIT RPI CMD: rpiReady?
+                /**
+                 * if rpiReady=1: sendMsg
+                 * else pass
+                 * RPI: receive cmd -> reply android, rpiReady =0 ->
+                 * send cmd to mBot -> mBot move send back ok -> rpi reply android, rpiReady =1
+                 */
+                controller.sendMessage(cmd)
+                prevCmd = cmd
+                Log.d(TAG, "cmd sent: $cmd")
+            }
+
+            JasiriDataHolder.setJoystickCmdToSend(Constants.DEFAULT)
+            Log.d(TAG, "cmd set to default")
+
+        }
+    }
+
+
 
 }

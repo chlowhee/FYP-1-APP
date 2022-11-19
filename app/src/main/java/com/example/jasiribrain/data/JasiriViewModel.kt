@@ -16,5 +16,10 @@ class JasiriViewModel: ViewModel() {
             JasiriDataHolder.studyActiveStatus.collect{emit(it)}
     }
 
+    val getjoystickCmdStatus: LiveData<String> = liveData {
+        JasiriDataHolder.joystickCmdStatus.collect{emit(it)}
+    }
+
+    //TODO: RPI READY STATUS
 
 }
