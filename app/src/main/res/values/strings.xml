@@ -24,9 +24,13 @@
     <string name="bluetooth_devices">Bluetooth Devices</string>
 <!--    HomeFragment-->
     <string name="jasiri_home">Jasiri Home</string>
+    <string name="good_cop">Good Cop</string>
+    <string name="bad_cop">Bad Cop</string>
     <string name="good_cop_1">You can do this!</string>
     <string name="bad_cop_1">Are you this weak?</string>
-<!--    StudyFragment-->
+    <string name="free_motivation">Free Motivation</string>
+    <string name="dance">Dance</string>
+    <!--    StudyFragment-->
     <string name="study_title">How do you want Jasiri to accompany you?</string>
     <string name="pomodoro_method">Pomodoro Method</string>
     <string name="getting_things_done_method">Getting Things Done Method</string>

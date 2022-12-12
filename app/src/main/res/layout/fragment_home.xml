@@ -20,4 +20,114 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/free_motivation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/free_motivation"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/home_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/motivation_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/free_motivation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/good_cop_button"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:backgroundTint="@color/pastel_green"
+            android:text="@string/good_cop"
+            />
+
+        <Button
+            android:id="@+id/bad_cop_button"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:backgroundTint="@color/pastel_red"
+            android:text="@string/bad_cop"
+            />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/dance_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dance_button_border"
+        android:src="@drawable/ic_dance_person"
+        android:scaleType="centerCrop"
+        android:padding="20dp"
+        android:text="@string/dance"
+        app:layout_constraintTop_toBottomOf="@+id/motivation_buttons"
+        app:layout_constraintBottom_toTopOf="@+id/joystick_ctrl"
+        app:layout_constraintEnd_toStartOf="@+id/play_button"
+        app:layout_constraintStart_toStartOf="@+id/joystick_ctrl" />
+
+    <ImageButton
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/play_button_border"
+        android:src="@drawable/ic_game_ctrl"
+        android:scaleType="centerCrop"
+        android:padding="20dp"
+        android:text="@string/dance"
+        app:layout_constraintTop_toBottomOf="@+id/motivation_buttons"
+        app:layout_constraintBottom_toTopOf="@+id/joystick_ctrl"
+        app:layout_constraintStart_toEndOf="@+id/dance_button"
+        app:layout_constraintEnd_toEndOf="@+id/joystick_ctrl"/>
+
+    <TextView
+        android:id="@+id/textView_angle_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0°"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView_strength_right"/>
+
+
+    <TextView
+        android:id="@+id/textView_strength_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_angle_right"
+        android:text="0%"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView_coordinate_right"/>
+
+
+    <TextView
+        android:id="@+id/textView_coordinate_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_strength_right"
+        android:text="dir"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/joystick_ctrl"/>
+
+    <io.github.controlwear.virtual.joystick.android.JoystickView
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/joystick_ctrl"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        custom:JV_borderWidth="3dp"
+        custom:JV_backgroundColor="@color/joystickBackground"
+        custom:JV_borderColor="@color/silver"
+        custom:JV_buttonColor="@color/silver"
+        custom:layout_constraintBottom_toBottomOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

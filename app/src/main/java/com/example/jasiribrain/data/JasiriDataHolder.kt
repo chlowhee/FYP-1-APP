@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 object JasiriDataHolder {
 
+    /**
+     * monitor study mode timer running
+     */
     private val _studyActiveStatus = MutableStateFlow(false)
 
     val studyActiveStatus: StateFlow<Boolean>
@@ -23,6 +26,9 @@ object JasiriDataHolder {
         _studyMethodSelect.value = status
     }
 
+    /**
+     * monitor bluetooth (not in use)
+     */
     private val _bluetoothActiveStatus = MutableStateFlow(false)
 
     val bluetoothActiveStatus: StateFlow<Boolean>
@@ -30,6 +36,30 @@ object JasiriDataHolder {
 
     fun setBluetoothIsActiveStatus(status: Boolean) {
         _bluetoothActiveStatus.value = status
+    }
+
+    /**
+     * monitor joystick cmd
+     */
+    private val _joystickCmdStatus = MutableStateFlow("default")
+
+    val joystickCmdStatus: StateFlow<String>
+        get() = _joystickCmdStatus
+
+    fun setJoystickCmdToSend(status: String) {
+        _joystickCmdStatus.value = status
+    }
+
+    /**
+     * rpiReadyStatus: check if RPi is ready to accept nxt cmd
+     */
+    private val _rpiReadyStatus = MutableStateFlow(false)
+
+    val rpiReadyStatus: StateFlow<Boolean>
+        get() = _rpiReadyStatus
+
+    fun setRpiIsReadyStatus(status: Boolean) {
+        _rpiReadyStatus.value = status
     }
 
 }

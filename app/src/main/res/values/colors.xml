@@ -14,4 +14,7 @@
     <color name="background">#FF0B5387</color>
     <color name="joystickBackground">#FF073763</color>
     <color name="red">#FFFF0000</color>
+    <color name="pastel_red">#FFFF6961</color>
+    <color name="pastel_green">#FF77DD77</color>
+    <color name="orange">#FFDC6601</color>
 </resources>

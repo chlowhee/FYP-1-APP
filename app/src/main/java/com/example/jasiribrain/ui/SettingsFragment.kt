@@ -121,6 +121,14 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                 Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
                 binding.getPairedStatus.text = "Connected: " + controller.connectedDeviceName
             }
+            "Z" -> {
+                JasiriDataHolder.setRpiIsReadyStatus(true)
+                Log.d("RPI STATUS", "RPI ready to transport")
+            }
+            "Q" -> {
+                JasiriDataHolder.setRpiIsReadyStatus(false)
+                Log.d("RPI STATUS", "RPI NOT ready to transport")
+            }
         }
     }
 
