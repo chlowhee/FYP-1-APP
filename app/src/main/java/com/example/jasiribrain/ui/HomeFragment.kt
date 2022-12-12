@@ -15,10 +15,7 @@ import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
-import kotlinx.coroutines.*
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class HomeFragment: Fragment() {
@@ -46,8 +43,6 @@ class HomeFragment: Fragment() {
 
         joystickControllerInit()
         jasiriMove()
-
-//        threadHandler.post { jasiriMove() }
     }
 
     private fun joystickControllerInit() {
@@ -68,7 +63,7 @@ class HomeFragment: Fragment() {
             prevCmd = Constants.DEFAULT
             return dir
         }
-        when (angle) {
+        when (angle) {  //TODO: reeval
             in 11..79 -> {
                 dir = "fwdR45"
             }
@@ -115,7 +110,4 @@ class HomeFragment: Fragment() {
 
         }
     }
-
-
-
 }
