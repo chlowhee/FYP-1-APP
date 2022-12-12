@@ -15,8 +15,10 @@ import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
 import kotlinx.coroutines.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class HomeFragment: Fragment() {
@@ -49,11 +51,11 @@ class HomeFragment: Fragment() {
     }
 
     private fun joystickControllerInit() {
-        binding.joystickCtrl.setOnMoveListener { angle, strength ->
+        binding.joystickCtrl.setOnMoveListener({ angle, strength ->
             binding.textViewAngleRight.text = "$angle°"
             binding.textViewStrengthRight.text = "$strength%"
             binding.textViewCoordinateRight.text = joystickUpdate(angle, strength)
-        }
+        }, 30)
     }
 
     private fun joystickUpdate(angle: Int, strength: Int):String {
@@ -62,7 +64,7 @@ class HomeFragment: Fragment() {
         //170-190 left 90  191 - 259 backleft
         //260-280 bwd      281 - 349 back right
         var dir = "dir"
-        if (strength == 0) {    //so wun send R when re-centre
+        if (strength < 30) {    //so wun send R when re-centre
             prevCmd = Constants.DEFAULT
             return dir
         }
@@ -101,19 +103,8 @@ class HomeFragment: Fragment() {
 
     private fun jasiriMove() {
         viewModel.getjoystickCmdStatus.observe(viewLifecycleOwner) { cmd ->
-            if (cmd != Constants.DEFAULT) {
-//                Log.d(TAG, "prev:current cmd = $prevCmd : $cmd")
-//                if (cmd == prevCmd) {
-//                    threadHandler.postDelayed(runnable, 1000)
-//                    Log.d(TAG, "after delay")
-//                }
-                //TODO WAIT RPI CMD: rpiReady?
-                /**
-                 * if rpiReady=1: sendMsg
-                 * else pass
-                 * RPI: receive cmd -> reply android, rpiReady =0 ->
-                 * send cmd to mBot -> mBot move send back ok -> rpi reply android, rpiReady =1
-                 */
+            Log.d(TAG, "RPI ready: " + JasiriDataHolder.rpiReadyStatus.value)
+            if (cmd != Constants.DEFAULT && JasiriDataHolder.rpiReadyStatus.value) {
                 controller.sendMessage(cmd)
                 prevCmd = cmd
                 Log.d(TAG, "cmd sent: $cmd")

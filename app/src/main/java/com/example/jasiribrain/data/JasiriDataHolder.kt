@@ -50,6 +50,16 @@ object JasiriDataHolder {
         _joystickCmdStatus.value = status
     }
 
-    //TODO: rpiReadyStatus
+    /**
+     * rpiReadyStatus: check if RPi is ready to accept nxt cmd
+     */
+    private val _rpiReadyStatus = MutableStateFlow(false)
+
+    val rpiReadyStatus: StateFlow<Boolean>
+        get() = _rpiReadyStatus
+
+    fun setRpiIsReadyStatus(status: Boolean) {
+        _rpiReadyStatus.value = status
+    }
 
 }
