@@ -35,7 +35,8 @@ interface Constants {
         const val POMODORO_SEL = 1
         const val GTD_SEL = 2
         const val FORCE_START_SEL = 3
-        const val FORCE_START_TIME_MS: Long = 120000
+        const val FORCE_START_TIME_MS: Long = 120000        //  2min
+        const val POMODORO_DEFAULT_TIME_MS: Long = 900000   //  15min
 
         //Commands to mBot
         const val DEFAULT = "default"

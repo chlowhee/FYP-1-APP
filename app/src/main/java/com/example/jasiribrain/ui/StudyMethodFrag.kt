@@ -3,6 +3,7 @@ package com.example.jasiribrain.ui
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -13,7 +14,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.jasiribrain.R
 import com.example.jasiribrain.bluetooth.BluetoothController
-import com.example.jasiribrain.common.BluetoothStatusListener
 import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.databinding.FragStudyMethodsBinding
@@ -62,6 +62,8 @@ class StudyMethodFrag: Fragment() {
                     descriptorinator.text = getString(R.string.time_to_focus)
                     cyclesLeftDescript.visibility = View.VISIBLE
                     timerSettings.visibility = View.VISIBLE
+//                    mTimeLeftMillis = Constants.POMODORO_DEFAULT_TIME_MS
+                    studyTimer.text = "15:00"
                 }
                 Constants.GTD_SEL -> {
                     studyMethodTitle.text = getString(R.string.gtd_title)
@@ -74,6 +76,7 @@ class StudyMethodFrag: Fragment() {
                     descriptorinator.text = getString(R.string.jump_start_your_brain)
                     cyclesLeftDescript.visibility = View.INVISIBLE
                     timerSettings.visibility = View.INVISIBLE
+//                    mTimeLeftMillis = Constants.FORCE_START_TIME_MS
                 }
             }
         }
@@ -101,11 +104,9 @@ class StudyMethodFrag: Fragment() {
         }
     }
 
-    private fun timerSettingsInit() {
-        binding.timerSettings.setOnClickListener {
-
-        }
-    }
+    /**
+     * Timer functions
+     */
 
     private fun startTimer() {
         mCountDownTimer = object : CountDownTimer(mTimeLeftMillis, 1000) {
@@ -119,7 +120,9 @@ class StudyMethodFrag: Fragment() {
                 JasiriDataHolder.setStudyIsActiveStatus(false)
                 binding.timerStartButton.text = getString(R.string.start)
                 mTimeLeftMillis = Constants.FORCE_START_TIME_MS
-                updateCountDownText()
+                val timerStopRing: MediaPlayer = MediaPlayer.create(activity, R.raw.timer_stop_ring)
+                timerStopRing.start()
+                updateCountDownText() //TODO: Goto a func that changes btwn break and study
             }
         }.start()
         JasiriDataHolder.setStudyIsActiveStatus(true)
@@ -155,6 +158,15 @@ class StudyMethodFrag: Fragment() {
                 startTimer()
             })
         builder!!.create().show()
+    }
+
+    /**
+     * POMODORO FUNCTIONS
+     */
+    private fun timerSettingsInit() {
+        binding.timerSettings.setOnClickListener {
+
+        }
     }
 
     private fun testbtnInit() {
