@@ -17,6 +17,9 @@ object JasiriDataHolder {
         _studyActiveStatus.value = status
     }
 
+    /**
+     * monitor which method is chosen
+     */
     private val _studyMethodSelect = MutableStateFlow(Constants.FORCE_START_SEL)
 
     val studyMethodSelect: StateFlow<Int>
@@ -24,6 +27,42 @@ object JasiriDataHolder {
 
     fun setStudyMethodSelect(status: Int) {
         _studyMethodSelect.value = status
+    }
+
+    /**
+     * monitor pomodoro duration chosen
+     */
+    private val _pomodoroDuration= MutableStateFlow(25)
+
+    val pomodoroDuration: StateFlow<Int>
+        get() = _pomodoroDuration
+
+    fun setPomodoroDuration(status: Int) {
+        _pomodoroDuration.value = status
+    }
+
+    /**
+     * monitor break duration chosen
+     */
+    private val _breakDuration= MutableStateFlow(25)
+
+    val breakDuration: StateFlow<Int>
+        get() = _breakDuration
+
+    fun setBreakDuration(status: Int) {
+        _breakDuration.value = status
+    }
+
+    /**
+     * monitor number of cycles chosen
+     */
+    private val _numCyclesSet= MutableStateFlow(25)
+
+    val numCyclesSet: StateFlow<Int>
+        get() = _numCyclesSet
+
+    fun setNumCycles(status: Int) {
+        _numCyclesSet.value = status
     }
 
     /**

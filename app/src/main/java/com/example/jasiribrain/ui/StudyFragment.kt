@@ -29,7 +29,7 @@ class StudyFragment: Fragment() {
     private val binding get() = _binding!!
     private val TAG = "studyFragment"
 
-//    private val studyMethodFrag = StudyMethodFrag()
+    private val pomodoroSettingDialog = PomodoroSettingDialog()
 
     @Inject lateinit var controller: BluetoothController
     private val viewModel: JasiriViewModel by viewModels()
@@ -187,7 +187,11 @@ class StudyFragment: Fragment() {
      */
     private fun timerSettingsInit() {
         binding.timerSettings.setOnClickListener {
-
+            if (!pomodoroSettingDialog.isAdded) {
+                childFragmentManager.beginTransaction()
+                    .add(R.id.methodFragment, pomodoroSettingDialog)
+                    .commitNow()
+            }
         }
     }
 
