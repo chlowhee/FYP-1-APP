@@ -17,7 +17,7 @@ object JasiriDataHolder {
         _studyActiveStatus.value = status
     }
 
-    private val _studyMethodSelect = MutableStateFlow(Constants.NONE_STUDY_SEL)
+    private val _studyMethodSelect = MutableStateFlow(Constants.FORCE_START_SEL)
 
     val studyMethodSelect: StateFlow<Int>
         get() = _studyMethodSelect
