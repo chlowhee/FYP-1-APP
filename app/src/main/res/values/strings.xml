@@ -44,4 +44,11 @@
     <string name="start">START</string>
     <string name="stop">STOP</string>
     <string name="min_2">02:00</string>
+    <string name="pomodoro_setting">POMODORO SETTING</string>
+    <string name="time_minutes">Time (minutes)</string>
+    <string name="pomodoro_pomo_settings">Pomodoro</string>
+    <string name="break_pomo_settings">Break</string>
+    <string name="number_of_cycles_pomo_settings">Number of cycles</string>
+    <string name="cycles_left">Cycles left: %d</string>
+    <string name="ok">OK</string>
 </resources>
