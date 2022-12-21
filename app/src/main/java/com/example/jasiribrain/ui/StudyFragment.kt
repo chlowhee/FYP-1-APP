@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.jasiribrain.R
@@ -35,7 +34,6 @@ class StudyFragment: Fragment() {
 
     private lateinit var mCountDownTimer: CountDownTimer
     private var mTimeLeftMillis = Constants.FORCE_START_TIME_MS
-    private var isBreakTime = false
     var builder: AlertDialog.Builder? = null
 
     override fun onCreateView(
@@ -64,7 +62,7 @@ class StudyFragment: Fragment() {
                 binding.pomodoroTitleUnselected.isClickable = false
                 binding.forceStartTitleUnselected.isClickable = false
             } else {
-                binding.run {
+                with (binding) {
                     pomodoroTitleUnselected.setOnClickListener {
                         JasiriDataHolder.setStudyMethodSelect(Constants.POMODORO_SEL)
 //                studyFragOpener(studyMethodFrag)
@@ -143,19 +141,26 @@ class StudyFragment: Fragment() {
 
             override fun onTick(millisUntilFinished: Long) {
                 mTimeLeftMillis = millisUntilFinished
+                if (binding.studyTimer.text == "10:01" || binding.studyTimer.text == "05:01") {
+                    Log.d(TAG, "${mTimeLeftMillis/Constants.MINUTE_IN_MILLIS} minutes left")
+                    timerMonitorer(mTimeLeftMillis/Constants.MINUTE_IN_MILLIS)
+                }
                 updateCountDownText()
             }
 
             override fun onFinish() {
                 JasiriDataHolder.setStudyIsActiveStatus(false)
                 binding.timerStartButton.text = getString(R.string.start)
-                mTimeLeftMillis = Constants.FORCE_START_TIME_MS
                 val timerStopRing: MediaPlayer = MediaPlayer.create(activity, R.raw.timer_stop_ring)
                 timerStopRing.start()
-                if (isBreakTime) {
+                if (JasiriDataHolder.isPomodoroBreak.value) {
                     JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesCounter.value-1)
+                    //TODO
+                    Log.d(TAG, "ROBO DANCE AND SAY TIME FOR NEXT CYCLE")
+                } else {
+                    Log.d(TAG, "ROBO SAYS CONGRATS")
                 }
-                isBreakTime = !isBreakTime
+                JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
                 displayTimerInit()
             }
         }.start()
@@ -166,7 +171,16 @@ class StudyFragment: Fragment() {
 
     private fun stopTimer() {
         mCountDownTimer.cancel()    //pause timer
-        timerStopAlertDialogInit()
+        if (!JasiriDataHolder.isPomodoroBreak.value) {
+            timerStopAlertDialogInit()
+        } else {
+            JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesCounter.value-1)
+            JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
+            displayTimerInit()
+            JasiriDataHolder.setStudyIsActiveStatus(false)
+            Log.d(TAG, "timer stopped")
+            binding.timerStartButton.text = getString(R.string.start)
+        }
     }
 
     private fun updateCountDownText() {
@@ -179,13 +193,13 @@ class StudyFragment: Fragment() {
 
     private fun timerStopAlertDialogInit() {
         builder = AlertDialog.Builder(activity)
-        builder!!.setMessage("Are you sure you wanna stop?")
+        builder!!.setMessage("Are you sure you wanna stop? It will mean you have not completed a cycle.")
             .setTitle(R.string.bad_cop_1)
             .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
                 JasiriDataHolder.setStudyIsActiveStatus(false)
                 Log.d(TAG, "timer stopped")
                 binding.timerStartButton.text = getString(R.string.start)
-                isBreakTime = !isBreakTime
+//                JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
                 displayTimerInit()
             })
             .setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
@@ -201,14 +215,14 @@ class StudyFragment: Fragment() {
             return
         }
         with(binding) {
-            if (!isBreakTime) {
+            if (!JasiriDataHolder.isPomodoroBreak.value) {
                 val pomodoroTimeSet = JasiriDataHolder.pomodoroDuration.value
                 descriptorinator.text = getString(R.string.time_to_focus)
-                mTimeLeftMillis = (pomodoroTimeSet * 60000).toLong()
+                mTimeLeftMillis = (pomodoroTimeSet * Constants.MINUTE_IN_MILLIS)
             } else {
                 val breakTimeSet = JasiriDataHolder.breakDuration.value
                 descriptorinator.text = getString(R.string.time_for_a_break_xd)
-                mTimeLeftMillis = (breakTimeSet * 60000).toLong()
+                mTimeLeftMillis = (breakTimeSet * Constants.MINUTE_IN_MILLIS)
             }
         }
         updateCountDownText()
@@ -217,9 +231,10 @@ class StudyFragment: Fragment() {
     /**
      * POMODORO FUNCTIONS
      */
+
     private fun timerSettingsInit() {
         binding.timerSettings.setOnClickListener {
-            if (!pomodoroSettingDialog.isAdded) {
+            if (!pomodoroSettingDialog.isAdded && !JasiriDataHolder.studyActiveStatus.value) {
                 childFragmentManager.beginTransaction()
                     .add(R.id.methodFragment, pomodoroSettingDialog)
                     .commitNow()
@@ -227,9 +242,10 @@ class StudyFragment: Fragment() {
         }
     }
 
+    // to set the timer after confirming in PomodoroSettingsDialog
     private fun pomoSettingsSet() {
         viewModel.pomodoroDurationStatus.observe(viewLifecycleOwner) {
-            isBreakTime = false
+            Log.d(TAG, "pomoSettings Set")
             displayTimerInit()
         }
     }
@@ -249,6 +265,27 @@ class StudyFragment: Fragment() {
             }
             .setNegativeButton("No") { dialog, id -> }
         builder!!.create().show()
+    }
+
+    /**
+     * ROBOT COMMAND FUNCTIONS
+     */
+
+    //10 min -> fidget
+    //5 min -> reminder to keep up
+    //timer stop -> ring and do congratulatory motion
+    
+    private fun timerMonitorer(time: Long) {
+        Log.d(TAG, "Entererd the monitor")
+        if (JasiriDataHolder.isPomodoroBreak.value) {return}
+        when (time) {
+            10L -> {
+                Log.d(TAG, "ROBOT FIDGET")
+            }
+            5L -> {
+                Log.d(TAG, "ROBOT DANCE")
+            }
+        }
     }
 
     private fun testbtnInit() {

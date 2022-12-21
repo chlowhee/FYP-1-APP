@@ -33,9 +33,10 @@ interface Constants {
         // Study methods
         const val FORCE_START_SEL = 0
         const val POMODORO_SEL = 1
-        //        const val GTD_SEL = 2
-        const val FORCE_START_TIME_MS: Long = 120000        //  2min
-        const val POMODORO_DEFAULT_TIME_MS: Long = 25*60000   //  25min
+//        const val GTD_SEL = 2
+        const val MINUTE_IN_MILLIS = 60000L
+        const val FORCE_START_TIME_MS = 2*MINUTE_IN_MILLIS        //  2min
+        const val POMODORO_DEFAULT_TIME_MS = 25*MINUTE_IN_MILLIS   //  25min
 
         //Commands to mBot
         const val DEFAULT = "default"

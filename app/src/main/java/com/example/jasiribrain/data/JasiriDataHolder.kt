@@ -32,7 +32,7 @@ object JasiriDataHolder {
     /**
      * monitor pomodoro duration chosen
      */
-    private val _pomodoroDuration= MutableStateFlow(25)
+    private val _pomodoroDuration = MutableStateFlow(25)
 
     val pomodoroDuration: StateFlow<Int>
         get() = _pomodoroDuration
@@ -44,7 +44,7 @@ object JasiriDataHolder {
     /**
      * monitor break duration chosen
      */
-    private val _breakDuration= MutableStateFlow(5)
+    private val _breakDuration = MutableStateFlow(5)
 
     val breakDuration: StateFlow<Int>
         get() = _breakDuration
@@ -56,7 +56,7 @@ object JasiriDataHolder {
     /**
      * monitor number of cycles chosen
      */
-    private val _numCyclesSet= MutableStateFlow(1)
+    private val _numCyclesSet = MutableStateFlow(1)
 
     val numCyclesSet: StateFlow<Int>
         get() = _numCyclesSet
@@ -66,13 +66,25 @@ object JasiriDataHolder {
     }
 
     // numCyclesSet for retaining originally set value. numCyclesCounter for counting down
-    private val _numCyclesCounter= MutableStateFlow(1)
+    private val _numCyclesCounter = MutableStateFlow(1)
 
     val numCyclesCounter: StateFlow<Int>
         get() = _numCyclesCounter
 
     fun setNumCyclesCounter(status: Int) {
         _numCyclesCounter.value = status
+    }
+
+    /**
+     * monitor if it is break time during pomodoro
+     */
+    private val _isPomodoroBreak = MutableStateFlow(false)
+
+    val isPomodoroBreak: StateFlow<Boolean>
+        get() = _isPomodoroBreak
+
+    fun setIsPomodoroBreak(status: Boolean) {
+        _isPomodoroBreak.value = status
     }
 
     /**

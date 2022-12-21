@@ -38,10 +38,11 @@ class PomodoroSettingDialog: Fragment() {
             val breakDuration = binding.breakPicker.value
             val numCycles = binding.numCyclesSpinner.selectedItem.toString()
             Log.d(TAG, "Pomodoro, Break, Cycles: $pomoDuration, $breakDuration, $numCycles")
-            JasiriDataHolder.setPomodoroDuration(pomoDuration)
+            JasiriDataHolder.setIsPomodoroBreak(false)
             JasiriDataHolder.setBreakDuration(breakDuration)
             JasiriDataHolder.setNumCycles(numCycles.toInt())
             JasiriDataHolder.setNumCyclesCounter(numCycles.toInt())
+            JasiriDataHolder.setPomodoroDuration(pomoDuration)
             parentFragmentManager.beginTransaction().remove(this).commitNow()
         }
     }
@@ -53,7 +54,7 @@ class PomodoroSettingDialog: Fragment() {
     }
 
     private fun initAllPicker() {
-        initPicker(1, 5, binding.pomodoroPicker)    //25-60
+        initPicker(1, 11, binding.pomodoroPicker)    //25-60
         initPicker(1, 5, binding.breakPicker)       //5-10
         binding.pomodoroPicker.value = JasiriDataHolder.pomodoroDuration.value
         binding.breakPicker.value = JasiriDataHolder.breakDuration.value
