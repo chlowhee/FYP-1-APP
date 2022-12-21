@@ -56,13 +56,23 @@ object JasiriDataHolder {
     /**
      * monitor number of cycles chosen
      */
-    private val _numCyclesSet= MutableStateFlow(25)
+    private val _numCyclesSet= MutableStateFlow(1)
 
     val numCyclesSet: StateFlow<Int>
         get() = _numCyclesSet
 
     fun setNumCycles(status: Int) {
         _numCyclesSet.value = status
+    }
+
+    // numCyclesSet for retaining originally set value. numCyclesCounter for counting down
+    private val _numCyclesCounter= MutableStateFlow(1)
+
+    val numCyclesCounter: StateFlow<Int>
+        get() = _numCyclesCounter
+
+    fun setNumCyclesCounter(status: Int) {
+        _numCyclesCounter.value = status
     }
 
     /**

@@ -55,6 +55,7 @@ class StudyFragment: Fragment() {
         testbtnInit()
         timerSettingsInit()
         pomoSettingsSet()
+        cyclesLeftSet()
     }
 
     private fun studyMethodCheck() {
@@ -121,7 +122,11 @@ class StudyFragment: Fragment() {
         binding.run {
             timerStartButton.setOnClickListener {
                 if (timerStartButton.text == getString(R.string.start)) {
-                    startTimer()
+                    if (JasiriDataHolder.numCyclesCounter.value == 0) {
+                        cyclesZeroAlertDialogInit()
+                    } else {
+                        startTimer()
+                    }
                 } else {
                     stopTimer()
                 }
@@ -147,6 +152,9 @@ class StudyFragment: Fragment() {
                 mTimeLeftMillis = Constants.FORCE_START_TIME_MS
                 val timerStopRing: MediaPlayer = MediaPlayer.create(activity, R.raw.timer_stop_ring)
                 timerStopRing.start()
+                if (isBreakTime) {
+                    JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesCounter.value-1)
+                }
                 isBreakTime = !isBreakTime
                 displayTimerInit()
             }
@@ -177,6 +185,7 @@ class StudyFragment: Fragment() {
                 JasiriDataHolder.setStudyIsActiveStatus(false)
                 Log.d(TAG, "timer stopped")
                 binding.timerStartButton.text = getString(R.string.start)
+                isBreakTime = !isBreakTime
                 displayTimerInit()
             })
             .setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
@@ -194,7 +203,7 @@ class StudyFragment: Fragment() {
         with(binding) {
             if (!isBreakTime) {
                 val pomodoroTimeSet = JasiriDataHolder.pomodoroDuration.value
-                descriptorinator.text = getString(R.string.jump_start_your_brain)
+                descriptorinator.text = getString(R.string.time_to_focus)
                 mTimeLeftMillis = (pomodoroTimeSet * 60000).toLong()
             } else {
                 val breakTimeSet = JasiriDataHolder.breakDuration.value
@@ -226,7 +235,20 @@ class StudyFragment: Fragment() {
     }
 
     private fun cyclesLeftSet() {
+        viewModel.numCyclesStatus.observe(viewLifecycleOwner) {
+                binding.cyclesLeftDescript.text = getString(R.string.cycles_left, it)
+        }
+    }
 
+    private fun cyclesZeroAlertDialogInit() {
+        builder = AlertDialog.Builder(activity)
+        builder!!.setMessage("If you choose to continue, your cycles will be reset")
+            .setTitle("You have completed your set cycles!")
+            .setPositiveButton("Reset") { dialog, id ->
+                JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesSet.value)
+            }
+            .setNegativeButton("No") { dialog, id -> }
+        builder!!.create().show()
     }
 
     private fun testbtnInit() {

@@ -28,6 +28,10 @@ class JasiriViewModel: ViewModel() {
         JasiriDataHolder.breakDuration.collect{emit(it)}
     }
 
+    val numCyclesStatus: LiveData<Int> = liveData {
+        JasiriDataHolder.numCyclesCounter.collect{emit(it)}
+    }
+
     val getjoystickCmdStatus: LiveData<String> = liveData {
         JasiriDataHolder.joystickCmdStatus.collect{emit(it)}
     }

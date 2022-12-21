@@ -41,6 +41,7 @@ class PomodoroSettingDialog: Fragment() {
             JasiriDataHolder.setPomodoroDuration(pomoDuration)
             JasiriDataHolder.setBreakDuration(breakDuration)
             JasiriDataHolder.setNumCycles(numCycles.toInt())
+            JasiriDataHolder.setNumCyclesCounter(numCycles.toInt())
             parentFragmentManager.beginTransaction().remove(this).commitNow()
         }
     }
