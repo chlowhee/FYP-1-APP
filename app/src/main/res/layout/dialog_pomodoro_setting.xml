@@ -43,16 +43,16 @@
         android:gravity="center"
         android:textColor="@color/light_black"
         app:layout_constraintTop_toBottomOf="@+id/time_in_minutes_title"
-        app:layout_constraintStart_toStartOf="@+id/pomodoro_picker_min"
-        app:layout_constraintEnd_toEndOf="@+id/pomodoro_picker_min"/>
+        app:layout_constraintStart_toStartOf="@+id/pomodoro_picker"
+        app:layout_constraintEnd_toEndOf="@+id/pomodoro_picker"/>
 
     <NumberPicker
-        android:id="@+id/pomodoro_picker_min"
+        android:id="@+id/pomodoro_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/pomodoro_timer_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/break_picker_min"/>
+        app:layout_constraintEnd_toStartOf="@+id/break_picker"/>
 
     <TextView
         android:id="@+id/break_timer_title"
@@ -64,14 +64,14 @@
         android:gravity="center"
         android:textColor="@color/light_black"
         app:layout_constraintTop_toBottomOf="@+id/time_in_minutes_title"
-        app:layout_constraintStart_toStartOf="@+id/break_picker_min"
-        app:layout_constraintEnd_toEndOf="@+id/break_picker_min"/>
+        app:layout_constraintStart_toStartOf="@+id/break_picker"
+        app:layout_constraintEnd_toEndOf="@+id/break_picker"/>
 
     <NumberPicker
-        android:id="@+id/break_picker_min"
+        android:id="@+id/break_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/pomodoro_picker_min"
+        app:layout_constraintStart_toEndOf="@+id/pomodoro_picker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pomodoro_timer_title"/>
 
@@ -100,7 +100,7 @@
         android:layout_marginBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/num_cycles_title"
-        app:layout_constraintTop_toBottomOf="@id/pomodoro_picker_min"
+        app:layout_constraintTop_toBottomOf="@id/pomodoro_picker"
         app:layout_constraintBottom_toTopOf="@+id/ok_btn_pomo_settings"/>
 
     <Button

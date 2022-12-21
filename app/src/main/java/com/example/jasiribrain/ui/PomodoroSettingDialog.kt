@@ -26,6 +26,7 @@ class PomodoroSettingDialog: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "JasiriDataHolder pomo: ${JasiriDataHolder.pomodoroDuration.value}")
 
         okButtonInit()
         initAllPicker()
@@ -33,8 +34,8 @@ class PomodoroSettingDialog: Fragment() {
 
     private fun okButtonInit() {
         binding.okBtnPomoSettings.setOnClickListener {
-            val pomoDuration = binding.pomodoroPickerMin.value
-            val breakDuration = binding.breakPickerMin.value
+            val pomoDuration = binding.pomodoroPicker.value
+            val breakDuration = binding.breakPicker.value
             val numCycles = binding.numCyclesSpinner.selectedItem.toString()
             Log.d(TAG, "Pomodoro, Break, Cycles: $pomoDuration, $breakDuration, $numCycles")
             JasiriDataHolder.setPomodoroDuration(pomoDuration)
@@ -51,8 +52,10 @@ class PomodoroSettingDialog: Fragment() {
     }
 
     private fun initAllPicker() {
-        initPicker(25, 60, binding.pomodoroPickerMin)
-        initPicker(5, 10, binding.breakPickerMin)
+        initPicker(1, 5, binding.pomodoroPicker)    //25-60
+        initPicker(1, 5, binding.breakPicker)       //5-10
+        binding.pomodoroPicker.value = JasiriDataHolder.pomodoroDuration.value
+        binding.breakPicker.value = JasiriDataHolder.breakDuration.value
     }
 
 }

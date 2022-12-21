@@ -30,12 +30,12 @@ class StudyFragment: Fragment() {
     private val TAG = "studyFragment"
 
     private val pomodoroSettingDialog = PomodoroSettingDialog()
-
     @Inject lateinit var controller: BluetoothController
     private val viewModel: JasiriViewModel by viewModels()
 
     private lateinit var mCountDownTimer: CountDownTimer
     private var mTimeLeftMillis = Constants.FORCE_START_TIME_MS
+    private var isBreakTime = false
     var builder: AlertDialog.Builder? = null
 
     override fun onCreateView(
@@ -54,21 +54,29 @@ class StudyFragment: Fragment() {
         timeStartInit()
         testbtnInit()
         timerSettingsInit()
+        pomoSettingsSet()
     }
 
     private fun studyMethodCheck() {
-        binding.run {
-            pomodoroTitleUnselected.setOnClickListener {
-                JasiriDataHolder.setStudyMethodSelect(Constants.POMODORO_SEL)
+        viewModel.isStudyingStatus.observe(viewLifecycleOwner) { yes ->
+            if (yes) {
+                binding.pomodoroTitleUnselected.isClickable = false
+                binding.forceStartTitleUnselected.isClickable = false
+            } else {
+                binding.run {
+                    pomodoroTitleUnselected.setOnClickListener {
+                        JasiriDataHolder.setStudyMethodSelect(Constants.POMODORO_SEL)
 //                studyFragOpener(studyMethodFrag)
-            }
+                    }
 //            gtdBtn.setOnClickListener {
 //                JasiriDataHolder.setStudyMethodSelect(Constants.GTD_SEL)
 //                studyFragOpener(studyMethodFrag)
 //            }
-            forceStartTitleUnselected.setOnClickListener {
-                JasiriDataHolder.setStudyMethodSelect(Constants.FORCE_START_SEL)
+                    forceStartTitleUnselected.setOnClickListener {
+                        JasiriDataHolder.setStudyMethodSelect(Constants.FORCE_START_SEL)
 //                studyFragOpener(studyMethodFrag)
+                    }
+                }
             }
         }
     }
@@ -92,9 +100,6 @@ class StudyFragment: Fragment() {
                         descriptorinator.text = getString(R.string.time_to_focus)
                         cyclesLeftDescript.visibility = View.VISIBLE
                         timerSettings.visibility = View.VISIBLE
-
-                        mTimeLeftMillis = Constants.POMODORO_DEFAULT_TIME_MS
-                        studyTimer.text = "15:00"   //mutable
                     }
                     Constants.FORCE_START_SEL -> {
                         forceStartTitleSelected.visibility = View.VISIBLE
@@ -105,11 +110,9 @@ class StudyFragment: Fragment() {
                         descriptorinator.text = getString(R.string.jump_start_your_brain)
                         cyclesLeftDescript.visibility = View.INVISIBLE
                         timerSettings.visibility = View.INVISIBLE
-
-                        mTimeLeftMillis = Constants.FORCE_START_TIME_MS
-                        studyTimer.text = "02:00"
                     }
                 }
+                displayTimerInit()
             }
         }
     }
@@ -144,7 +147,8 @@ class StudyFragment: Fragment() {
                 mTimeLeftMillis = Constants.FORCE_START_TIME_MS
                 val timerStopRing: MediaPlayer = MediaPlayer.create(activity, R.raw.timer_stop_ring)
                 timerStopRing.start()
-                updateCountDownText() //TODO: Goto a func that changes btwn break and study
+                isBreakTime = !isBreakTime
+                displayTimerInit()
             }
         }.start()
         JasiriDataHolder.setStudyIsActiveStatus(true)
@@ -173,13 +177,32 @@ class StudyFragment: Fragment() {
                 JasiriDataHolder.setStudyIsActiveStatus(false)
                 Log.d(TAG, "timer stopped")
                 binding.timerStartButton.text = getString(R.string.start)
-                mTimeLeftMillis = Constants.FORCE_START_TIME_MS
-                updateCountDownText()
+                displayTimerInit()
             })
             .setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
                 startTimer()
             })
         builder!!.create().show()
+    }
+
+    private fun displayTimerInit() {
+        if (JasiriDataHolder.studyMethodSelect.value != 1) {
+            mTimeLeftMillis = Constants.FORCE_START_TIME_MS
+            updateCountDownText()
+            return
+        }
+        with(binding) {
+            if (!isBreakTime) {
+                val pomodoroTimeSet = JasiriDataHolder.pomodoroDuration.value
+                descriptorinator.text = getString(R.string.jump_start_your_brain)
+                mTimeLeftMillis = (pomodoroTimeSet * 60000).toLong()
+            } else {
+                val breakTimeSet = JasiriDataHolder.breakDuration.value
+                descriptorinator.text = getString(R.string.time_for_a_break_xd)
+                mTimeLeftMillis = (breakTimeSet * 60000).toLong()
+            }
+        }
+        updateCountDownText()
     }
 
     /**
@@ -193,6 +216,17 @@ class StudyFragment: Fragment() {
                     .commitNow()
             }
         }
+    }
+
+    private fun pomoSettingsSet() {
+        viewModel.pomodoroDurationStatus.observe(viewLifecycleOwner) {
+            isBreakTime = false
+            displayTimerInit()
+        }
+    }
+
+    private fun cyclesLeftSet() {
+
     }
 
     private fun testbtnInit() {

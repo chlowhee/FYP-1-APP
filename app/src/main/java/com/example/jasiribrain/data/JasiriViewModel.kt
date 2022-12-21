@@ -20,6 +20,14 @@ class JasiriViewModel: ViewModel() {
         JasiriDataHolder.studyMethodSelect.collect{emit(it)}
     }
 
+    val pomodoroDurationStatus: LiveData<Int> = liveData {
+        JasiriDataHolder.pomodoroDuration.collect{emit(it)}
+    }
+
+    val breakDurationStatus: LiveData<Int> = liveData {
+        JasiriDataHolder.breakDuration.collect{emit(it)}
+    }
+
     val getjoystickCmdStatus: LiveData<String> = liveData {
         JasiriDataHolder.joystickCmdStatus.collect{emit(it)}
     }

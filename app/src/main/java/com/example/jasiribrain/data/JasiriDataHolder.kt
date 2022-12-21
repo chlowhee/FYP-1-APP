@@ -44,7 +44,7 @@ object JasiriDataHolder {
     /**
      * monitor break duration chosen
      */
-    private val _breakDuration= MutableStateFlow(25)
+    private val _breakDuration= MutableStateFlow(5)
 
     val breakDuration: StateFlow<Int>
         get() = _breakDuration
