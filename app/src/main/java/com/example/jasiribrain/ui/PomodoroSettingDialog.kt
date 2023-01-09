@@ -6,20 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.databinding.DialogPomodoroSettingBinding
 
-class PomodoroSettingDialog: Fragment() {
+class PomodoroSettingDialog: DialogFragment() {
 
     private var _binding: DialogPomodoroSettingBinding? = null
     private val binding get() = _binding!!
-    private val TAG = "PomoSettingDialog"
+    val TAG = "PomoSettingDialog"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        dialog?.setCanceledOnTouchOutside(true)
         _binding = DialogPomodoroSettingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,8 +55,8 @@ class PomodoroSettingDialog: Fragment() {
     }
 
     private fun initAllPicker() {
-        initPicker(1, 11, binding.pomodoroPicker)    //25-60
-        initPicker(1, 5, binding.breakPicker)       //5-10
+        initPicker(1, 30, binding.pomodoroPicker)    //25-60
+        initPicker(1, 10, binding.breakPicker)       //5-10
         binding.pomodoroPicker.value = JasiriDataHolder.pomodoroDuration.value
         binding.breakPicker.value = JasiriDataHolder.breakDuration.value
     }

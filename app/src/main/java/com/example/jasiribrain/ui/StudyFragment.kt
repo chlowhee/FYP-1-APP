@@ -51,7 +51,7 @@ class StudyFragment: Fragment() {
         studyMethodUiInit()
         timeStartInit()
         testbtnInit()
-        timerSettingsInit()
+        pomodoroSettingsInit()
         pomoSettingsSet()
         cyclesLeftSet()
     }
@@ -96,7 +96,6 @@ class StudyFragment: Fragment() {
                         forceStartTitleSelected.visibility = View.INVISIBLE
                         forceStartTitleUnselected.visibility = View.VISIBLE
 
-                        descriptorinator.text = getString(R.string.time_to_focus)
                         cyclesLeftDescript.visibility = View.VISIBLE
                         timerSettings.visibility = View.VISIBLE
                     }
@@ -153,14 +152,10 @@ class StudyFragment: Fragment() {
                 binding.timerStartButton.text = getString(R.string.start)
                 val timerStopRing: MediaPlayer = MediaPlayer.create(activity, R.raw.timer_stop_ring)
                 timerStopRing.start()
-                if (JasiriDataHolder.isPomodoroBreak.value) {
-                    JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesCounter.value-1)
-                    //TODO
-                    Log.d(TAG, "ROBO DANCE AND SAY TIME FOR NEXT CYCLE")
-                } else {
-                    Log.d(TAG, "ROBO SAYS CONGRATS")
+                if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL) {
+                    timerEndAction()
+                    JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
                 }
-                JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
                 displayTimerInit()
             }
         }.start()
@@ -232,12 +227,10 @@ class StudyFragment: Fragment() {
      * POMODORO FUNCTIONS
      */
 
-    private fun timerSettingsInit() {
+    private fun pomodoroSettingsInit() {
         binding.timerSettings.setOnClickListener {
             if (!pomodoroSettingDialog.isAdded && !JasiriDataHolder.studyActiveStatus.value) {
-                childFragmentManager.beginTransaction()
-                    .add(R.id.methodFragment, pomodoroSettingDialog)
-                    .commitNow()
+                pomodoroSettingDialog.show(childFragmentManager, pomodoroSettingDialog.TAG)
             }
         }
     }
@@ -276,15 +269,35 @@ class StudyFragment: Fragment() {
     //timer stop -> ring and do congratulatory motion
     
     private fun timerMonitorer(time: Long) {
-        Log.d(TAG, "Entererd the monitor")
         if (JasiriDataHolder.isPomodoroBreak.value) {return}
         when (time) {
             10L -> {
                 Log.d(TAG, "ROBOT FIDGET")
+                val tenMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.ten_mins_left)
+                tenMinReminder.start()
+                controller.sendMessage(Constants.FIDGET)
             }
             5L -> {
                 Log.d(TAG, "ROBOT DANCE")
+                val fiveMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.five_mins_left)
+                fiveMinReminder.start()
+                controller.sendMessage(Constants.FIDGET)
             }
+        }
+    }
+
+    private fun timerEndAction() {
+        //TODO
+        if (JasiriDataHolder.isPomodoroBreak.value) {   //after break end
+            JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesCounter.value-1)
+            Log.d(TAG, "ROBO DANCE AND SAY TIME FOR NEXT CYCLE")
+            controller.sendMessage(Constants.DANCE)
+        } else {
+            Log.d(TAG, "ROBO SAYS CONGRATS")
+            val pomodoroEndedAlerter: MediaPlayer = MediaPlayer.create(activity, R.raw.pomodoro_ended)
+            pomodoroEndedAlerter.start()
+            controller.sendMessage(Constants.FIDGET)
+
         }
     }
 

@@ -40,9 +40,12 @@ interface Constants {
 
         //Commands to mBot
         const val DEFAULT = "default"
+        const val PING = "ping"
         const val FWD = "A"
         const val BWD = "B"
         const val RIGHT = "C"
         const val LEFT = "D"
+        const val FIDGET = "G"
+        const val DANCE = "H"
     }
 }
