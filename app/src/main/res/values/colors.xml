@@ -6,6 +6,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="light_black">#FF222222</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="grey_gainsboro">#FFDCDCDC</color>
@@ -14,4 +15,7 @@
     <color name="background">#FF0B5387</color>
     <color name="joystickBackground">#FF073763</color>
     <color name="red">#FFFF0000</color>
+    <color name="pastel_red">#FFFF6961</color>
+    <color name="pastel_green">#FF77DD77</color>
+    <color name="orange">#FFDC6601</color>
 </resources>

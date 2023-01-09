@@ -6,7 +6,7 @@
     android:background="@color/black">
 
     <TextView
-        android:id="@+id/exit_btn"
+        android:id="@+id/bt_device_exit_btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text="@string/exit_x"
@@ -24,7 +24,7 @@
         android:drawableStart="@drawable/ic_refresh"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/exit_btn"/>
+        app:layout_constraintEnd_toStartOf="@+id/bt_device_exit_btn"/>
 
     <TextView
         android:id="@+id/bt_devices_title"

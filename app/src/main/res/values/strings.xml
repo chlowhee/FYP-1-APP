@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">JasiriHeart</string>
+    <string name="app_name">JasiriBrain</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings_title">Jasiri Settings</string>
     <string name="study">Study</string>
     <string name="home">Home</string>
+<!--    SettingsFragment-->
     <string name="settings">Settings</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="connect">Connect</string>
@@ -21,4 +22,33 @@
     <string name="exit_x">X</string>
     <string name="no_devices_connected">No devices connected</string>
     <string name="bluetooth_devices">Bluetooth Devices</string>
+<!--    HomeFragment-->
+    <string name="jasiri_home">Jasiri Home</string>
+    <string name="good_cop">Good Cop</string>
+    <string name="bad_cop">Bad Cop</string>
+    <string name="good_cop_1">You can do this!</string>
+    <string name="bad_cop_1">Are you this weak?</string>
+    <string name="free_motivation">Free Motivation</string>
+    <string name="dance">Dance</string>
+    <!--    StudyFragment-->
+<!--    <string name="study_title">How do you want Jasiri to accompany you?</string>-->
+<!--    <string name="pomodoro_method">Pomodoro Method</string>-->
+<!--    <string name="getting_things_done_method">Getting Things Done Method</string>-->
+<!--    <string name="force_start_method">Force Start</string>-->
+<!--    <string name="gtd_title">GTD</string>-->
+    <string name="pomodoro_title">POMODORO</string>
+    <string name="force_start_title">FORCE START</string>
+    <string name="jump_start_your_brain">Jump start your brain!</string>
+    <string name="time_to_focus">Time to focus!</string>
+    <string name="time_for_a_break_xd">Time for a break XD</string>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="min_2">02:00</string>
+    <string name="pomodoro_setting">POMODORO SETTING</string>
+    <string name="time_minutes">Time (minutes)</string>
+    <string name="pomodoro_pomo_settings">Pomodoro</string>
+    <string name="break_pomo_settings">Break</string>
+    <string name="number_of_cycles_pomo_settings">Number of cycles</string>
+    <string name="cycles_left">Cycles left: %d</string>
+    <string name="ok">OK</string>
 </resources>
