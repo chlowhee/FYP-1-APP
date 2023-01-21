@@ -38,8 +38,21 @@ class HomeFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        playAndDanceButtonInit()
         joystickControllerInit()
         jasiriMove()
+    }
+
+    private fun playAndDanceButtonInit() {
+        binding.playButton.setOnClickListener {
+            Log.d(TAG, "Play Button pressed")
+            controller.sendMessage(Constants.GAME)
+            //TODO: MINI FRAGMENT FOR GAME. + RETRIEVE RESULTS INFO
+        }
+        binding.danceButton.setOnClickListener {
+            Log.d(TAG, "Dance Button pressed")
+            controller.sendMessage(Constants.DANCE)
+        }
     }
 
     private fun joystickControllerInit() {

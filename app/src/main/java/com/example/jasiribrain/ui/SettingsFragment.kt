@@ -109,6 +109,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                 BluetoothChatService.STATE_NONE -> {
                     text = getString(R.string.no_devices_connected)
                     btConnected = false
+                    JasiriDataHolder.setBluetoothIsActiveStatus(false)
                 }
             }
         }
@@ -120,7 +121,8 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
             "K" -> {
                 Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
                 binding.getPairedStatus.text = "Connected: " + controller.connectedDeviceName
-                controller.sendMessage(Constants.PING) //TODO: Make a function to ping rpi every 2 mins
+                controller.sendMessage(Constants.PING)
+                JasiriDataHolder.setBluetoothIsActiveStatus(true)
             }
             "Z" -> {
                 JasiriDataHolder.setRpiIsReadyStatus(true)

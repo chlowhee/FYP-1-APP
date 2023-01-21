@@ -88,7 +88,7 @@ object JasiriDataHolder {
     }
 
     /**
-     * monitor bluetooth (not in use)
+     * monitor if bluetooth is connected to Jasiri
      */
     private val _bluetoothActiveStatus = MutableStateFlow(false)
 

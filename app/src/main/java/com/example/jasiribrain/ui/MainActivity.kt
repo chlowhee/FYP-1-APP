@@ -6,19 +6,20 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import com.example.jasiribrain.R
+import com.example.jasiribrain.bluetooth.BluetoothController
+import com.example.jasiribrain.data.Constants
+import com.example.jasiribrain.data.JasiriDataHolder
+import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.ActivityMainBinding
 import com.example.jasiribrain.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
-import com.example.jasiribrain.data.JasiriDataHolder
-import androidx.activity.viewModels
-import androidx.lifecycle.Observer
-import com.example.jasiribrain.bluetooth.BluetoothController
-import com.example.jasiribrain.data.JasiriViewModel
+import java.util.*
+import javax.inject.Inject
 
 private val REQUIRED_PERMISSION_LIST = arrayOf(
     Manifest.permission.BLUETOOTH,
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var currFrag: Fragment
 
     private val viewModel: JasiriViewModel by viewModels()
+    @Inject lateinit var controller: BluetoothController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         checkAndRequestPermissions()
         bottomNavSelect()
         bottomNavEnabled()
+        pingRpiEveryFiveMinutes()
     }
 
     /**
@@ -134,5 +137,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun pingRpiEveryFiveMinutes() { //can forgo
+        val timerObj = Timer()
+        val timerTaskObj: TimerTask = object : TimerTask() {
+            override fun run() {
+                if (JasiriDataHolder.bluetoothActiveStatus.value) {
+                    controller.sendMessage("ping")
+                    Log.d("PING", "send ping")
+                }
+            }
+        }
+        timerObj.schedule(timerTaskObj, 0, 30000)
+    }
 }
 
