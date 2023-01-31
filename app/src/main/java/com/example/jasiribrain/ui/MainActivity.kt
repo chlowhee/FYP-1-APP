@@ -16,6 +16,7 @@ import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.ActivityMainBinding
+import com.example.jasiribrain.facedetector.CameraPreview
 import com.example.jasiribrain.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val studyFrag = StudyFragment()
     private val homeFrag = HomeFragment()
     private lateinit var currFrag: Fragment
+    private val cameraPreview = CameraPreview()
 
     private val viewModel: JasiriViewModel by viewModels()
     @Inject lateinit var controller: BluetoothController
@@ -136,6 +138,19 @@ class MainActivity : AppCompatActivity() {
                 if (yes) menu.forEach { it.isEnabled = false }
                 else menu.forEach { it.isEnabled = true }
             }
+        }
+    }
+
+    fun activateFaceDetection() {
+        if (!cameraPreview.isAdded) {
+            supportFragmentManager.beginTransaction().replace(R.id.camera_preview, cameraPreview)
+                .commit()
+        }
+    }
+
+    fun stopFaceDetection() {
+        if (cameraPreview.isAdded) {
+            supportFragmentManager.beginTransaction().remove(cameraPreview).commit()
         }
     }
 

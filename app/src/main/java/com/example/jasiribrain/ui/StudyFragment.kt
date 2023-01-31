@@ -17,6 +17,7 @@ import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.FragmentStudyBinding
+import com.example.jasiribrain.facedetector.CameraPreview
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -51,6 +52,7 @@ class StudyFragment: Fragment() {
         studyMethodUiInit()
         timeStartInit()
         testbtnInit()
+        testbtn2Init()
         pomodoroSettingsInit()
         pomoSettingsSet()
         cyclesLeftSet()
@@ -303,7 +305,14 @@ class StudyFragment: Fragment() {
 
     private fun testbtnInit() {
         binding.forceStarTester.setOnClickListener {
-            controller.sendMessage(Constants.FWD)
+//            controller.sendMessage(Constants.FWD)
+            (activity as MainActivity).activateFaceDetection()
+        }
+    }
+
+    private fun testbtn2Init() {
+        binding.forceStarTester2.setOnClickListener {
+            (activity as MainActivity).stopFaceDetection()
         }
     }
 
