@@ -2,6 +2,7 @@ package com.example.jasiribrain.facedetector
 
 import android.content.Context
 import android.util.Log
+import com.example.jasiribrain.data.JasiriDataHolder
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
@@ -37,9 +38,17 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
 
     override fun onSuccess(faces: List<Face>, graphicOverlay: GraphicOverlay) {
         for (face in faces) {
-//            graphicOverlay.add(FaceGraphic(graphicOverlay, face)) // no nd graphics
+//            graphicOverlay.add(FaceGraphic(graphicOverlay, face)) //no nd graphics
             logExtrasForTesting(face)
 //            faceTracker(face)
+            if (JasiriDataHolder.eyeDetectionIsWanted.value) {
+                sleepyEyesDetector(face)
+                Log.v(MANUAL_TESTING_LOG, "eyesClosed counter: $eyesClosedCounter")
+                if (eyesClosedCounter > sleepingThreshold) {
+                    eyesClosedCounter = 0
+                    JasiriDataHolder.setEyesAreSleepy(true)
+                }
+            }
         }
     }
 
@@ -49,35 +58,52 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
 
     companion object {
         private const val TAG = "FaceDetectorProcessor"
+        private const val sleepingThreshold = 650
+        private var eyesClosedCounter = 0
+
         private fun faceTracker(face: Face?) { //TODO
             // Euler & closeness of face will change
             // middleVal - ans; -ve: move left; +ve: move right
             if (face == null) return
             //maybe update results to data holder to allow controller to move
         }
+
+        private fun sleepyEyesDetector(face: Face?) {
+            if (face == null) return
+            val leftEye = face.leftEyeOpenProbability
+            val rightEye = face.rightEyeOpenProbability
+
+            if (leftEye == null || rightEye == null) return
+
+            if ((leftEye < 0.5) && (rightEye < 0.5)) {
+                // eyes are closed
+                eyesClosedCounter++
+            }
+        }
+
         private fun logExtrasForTesting(face: Face?) {
             if (face != null) {
                 Log.v(
                     MANUAL_TESTING_LOG, //TODO: Check relative to center
                     "face bounding box: " + face.boundingBox.flattenToString()
                 )
-                val faceCenter = face.boundingBox.flattenToString().substring(0,3).toInt()
-                Log.v(
-                    MANUAL_TESTING_LOG,
-                    "face bound 1 int: $faceCenter"
-                )
-                Log.v(
-                    MANUAL_TESTING_LOG,
-                    "face Euler Angle X: " + face.headEulerAngleX
-                )
-                Log.v(
+//                val faceCenter = face.boundingBox.flattenToString().substring(0,3).toInt()
+//                Log.v(                            //will crash if number <100
+//                    MANUAL_TESTING_LOG,
+//                    "face bound 1 int: $faceCenter"
+//                )
+//                Log.v(
+//                    MANUAL_TESTING_LOG,
+//                    "face Euler Angle X: " + face.headEulerAngleX
+//                )
+                Log.v(  //+ve: right of cam; -ve: left of cam
                     MANUAL_TESTING_LOG,
                     "face Euler Angle Y: " + face.headEulerAngleY
                 )
-                Log.v(
-                    MANUAL_TESTING_LOG,
-                    "face Euler Angle Z: " + face.headEulerAngleZ
-                )
+//                Log.v(
+//                    MANUAL_TESTING_LOG,
+//                    "face Euler Angle Z: " + face.headEulerAngleZ
+//                )
                 //TODO: REMOVE IF RLY DO NOT NEED LANDMARK POSITIONS
                 // All landmarks
 //                val landMarkTypes = intArrayOf(

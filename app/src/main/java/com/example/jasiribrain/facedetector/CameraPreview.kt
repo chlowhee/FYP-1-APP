@@ -126,7 +126,7 @@ class CameraPreview: Fragment() {
             }
 
         val builder = ImageAnalysis.Builder()
-        val targetResolution = android.util.Size.parseSize("640x480")
+        val targetResolution = android.util.Size.parseSize("480x640")
         if (targetResolution != null) {
             builder.setTargetResolution(targetResolution)
         }

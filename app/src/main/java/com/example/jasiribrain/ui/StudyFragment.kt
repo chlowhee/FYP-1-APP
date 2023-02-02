@@ -17,7 +17,6 @@ import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.FragmentStudyBinding
-import com.example.jasiribrain.facedetector.CameraPreview
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -36,6 +35,7 @@ class StudyFragment: Fragment() {
     private lateinit var mCountDownTimer: CountDownTimer
     private var mTimeLeftMillis = Constants.FORCE_START_TIME_MS
     var builder: AlertDialog.Builder? = null
+    var toggleEyeD = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +56,7 @@ class StudyFragment: Fragment() {
         pomodoroSettingsInit()
         pomoSettingsSet()
         cyclesLeftSet()
+        personSleepyCheck()
     }
 
     private fun studyMethodCheck() {
@@ -150,18 +151,22 @@ class StudyFragment: Fragment() {
             }
 
             override fun onFinish() {
-                JasiriDataHolder.setStudyIsActiveStatus(false)
+                JasiriDataHolder.setTimerIsActiveStatus(false)
                 binding.timerStartButton.text = getString(R.string.start)
                 val timerStopRing: MediaPlayer = MediaPlayer.create(activity, R.raw.timer_stop_ring)
                 timerStopRing.start()
                 if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL) {
                     timerEndAction()
                     JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
+                    toggleEyeDetectionEveryFiveMins()
                 }
                 displayTimerInit()
             }
         }.start()
-        JasiriDataHolder.setStudyIsActiveStatus(true)
+        JasiriDataHolder.setTimerIsActiveStatus(true)
+        if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL) {
+            toggleEyeDetectionEveryFiveMins()
+        }
         Log.d(TAG, "timer started")
         binding.timerStartButton.text = getString(R.string.stop)
     }
@@ -174,7 +179,8 @@ class StudyFragment: Fragment() {
             JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesCounter.value-1)
             JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
             displayTimerInit()
-            JasiriDataHolder.setStudyIsActiveStatus(false)
+            JasiriDataHolder.setTimerIsActiveStatus(false)
+            toggleEyeDetectionEveryFiveMins()
             Log.d(TAG, "timer stopped")
             binding.timerStartButton.text = getString(R.string.start)
         }
@@ -192,16 +198,17 @@ class StudyFragment: Fragment() {
         builder = AlertDialog.Builder(activity)
         builder!!.setMessage("Are you sure you wanna stop? It will mean you have not completed a cycle.")
             .setTitle(R.string.bad_cop_1)
-            .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
-                JasiriDataHolder.setStudyIsActiveStatus(false)
+            .setPositiveButton("Yes") { dialog, id ->
+                JasiriDataHolder.setTimerIsActiveStatus(false)
                 Log.d(TAG, "timer stopped")
                 binding.timerStartButton.text = getString(R.string.start)
-//                JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
                 displayTimerInit()
-            })
-            .setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
+                toggleEyeDetectionEveryFiveMins()
+                toggleEyeD = false
+            }
+            .setNegativeButton("No") { dialog, id ->
                 startTimer()
-            })
+            }
         builder!!.create().show()
     }
 
@@ -231,7 +238,7 @@ class StudyFragment: Fragment() {
 
     private fun pomodoroSettingsInit() {
         binding.timerSettings.setOnClickListener {
-            if (!pomodoroSettingDialog.isAdded && !JasiriDataHolder.studyActiveStatus.value) {
+            if (!pomodoroSettingDialog.isAdded && !JasiriDataHolder.timerActiveStatus.value) {
                 pomodoroSettingDialog.show(childFragmentManager, pomodoroSettingDialog.TAG)
             }
         }
@@ -271,7 +278,7 @@ class StudyFragment: Fragment() {
     //timer stop -> ring and do congratulatory motion
     
     private fun timerMonitorer(time: Long) {
-        if (JasiriDataHolder.isPomodoroBreak.value) {return}
+        if (JasiriDataHolder.isPomodoroBreak.value) return
         when (time) {
             10L -> {
                 Log.d(TAG, "ROBOT FIDGET")
@@ -303,10 +310,54 @@ class StudyFragment: Fragment() {
         }
     }
 
+    /**
+     * FACE TRACKER & EYE DETECTION
+     */
+    private fun toggleEyeDetectionEveryFiveMins() {
+        if (!JasiriDataHolder.isPomodoroBreak.value && JasiriDataHolder.timerActiveStatus.value){
+            toggleEyeD = true
+        }
+        val timerObj = Timer()
+        val timerTaskObj = object : TimerTask() {
+            override fun run() {
+                if (!JasiriDataHolder.isPomodoroBreak.value && JasiriDataHolder.timerActiveStatus.value) {
+                    if(toggleEyeD) {
+                        JasiriDataHolder.setEyeDetectionIsWanted(true)
+                    } else {
+                        JasiriDataHolder.setEyeDetectionIsWanted(false)
+                    }
+                    toggleEyeD = !toggleEyeD
+
+                    Log.d("LogTagForTest", "toggle ON eye detection every 5 mins")
+                } else {
+                    JasiriDataHolder.setEyeDetectionIsWanted(false)
+                    timerObj.cancel()
+                    timerObj.purge()
+                    Log.d("LogTagForTest", "toggle OFF eye detection every 5 mins")
+                }
+            }
+        }
+        timerObj.schedule(timerTaskObj, 0, 2*Constants.MINUTE_IN_MILLIS)
+    }
+
+    private fun personSleepyCheck() {
+        viewModel.checkEyeIsSleepyStatus.observe(viewLifecycleOwner) {sleepy ->
+            if (sleepy) {
+                controller.sendMessage("Sleepy command")
+                JasiriDataHolder.setEyesAreSleepy(false)
+            }
+        }
+    }
+
+    private fun faceDetectionSel() {
+
+    }
+
     private fun testbtnInit() {
         binding.forceStarTester.setOnClickListener {
 //            controller.sendMessage(Constants.FWD)
-            (activity as MainActivity).activateFaceDetection()
+//            (activity as MainActivity).activateFaceDetection()
+            toggleEyeDetectionEveryFiveMins()
         }
     }
 
