@@ -311,7 +311,7 @@ class StudyFragment: Fragment() {
     }
 
     /**
-     * FACE TRACKER & EYE DETECTION
+     * EYE DETECTION
      */
     private fun toggleEyeDetectionEveryFiveMins() {
         if (!JasiriDataHolder.isPomodoroBreak.value && JasiriDataHolder.timerActiveStatus.value){
@@ -349,21 +349,19 @@ class StudyFragment: Fragment() {
         }
     }
 
-    private fun faceDetectionSel() {
-
-    }
-
     private fun testbtnInit() {
         binding.forceStarTester.setOnClickListener {
 //            controller.sendMessage(Constants.FWD)
-//            (activity as MainActivity).activateFaceDetection()
-            toggleEyeDetectionEveryFiveMins()
+            (activity as MainActivity).activateFaceDetection()
+//            toggleEyeDetectionEveryFiveMins()
+            JasiriDataHolder.setFaceTrackingIsWanted(true)
         }
     }
 
     private fun testbtn2Init() {
         binding.forceStarTester2.setOnClickListener {
-            (activity as MainActivity).stopFaceDetection()
+//            (activity as MainActivity).stopFaceDetection()
+            JasiriDataHolder.setFaceTrackingIsWanted(false)
         }
     }
 

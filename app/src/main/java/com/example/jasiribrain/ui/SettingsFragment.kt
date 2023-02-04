@@ -18,8 +18,6 @@ import com.example.jasiribrain.common.BluetoothStatusListener
 import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.DataStoreRepo
 import com.example.jasiribrain.data.JasiriDataHolder
-import com.example.jasiribrain.data.JasiriViewModel
-//import androidx.fragment.app.viewModels
 import com.example.jasiribrain.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -74,7 +72,6 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                 binding.bluetoothOnOff.text = getString(R.string.off)
             }
         }
-//        JasiriDataHolder.bluetoothActiveStatus.ob
     }
 
     @SuppressLint("SetTextI18n")
@@ -121,8 +118,15 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
             "K" -> {
                 Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
                 binding.getPairedStatus.text = "Connected: " + controller.connectedDeviceName
-                controller.sendMessage(Constants.PING)
+//                controller.sendMessage(Constants.PING)
                 JasiriDataHolder.setBluetoothIsActiveStatus(true)
+                if (JasiriDataHolder.faceTrackingIsWanted.value) {
+                    JasiriDataHolder.setFaceTrackingIsWanted(false)
+                }
+            }
+            "P" -> {
+                Log.d("LogTagForTest", "Activate Face Tracking")
+                JasiriDataHolder.setFaceTrackingIsWanted(true)
             }
             "Z" -> {
                 JasiriDataHolder.setRpiIsReadyStatus(true)

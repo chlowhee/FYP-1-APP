@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavSelect()
         bottomNavEnabled()
         toggleFaceDetection()
+        faceTrackerMover()
         pingRpiEveryFiveMinutes()
     }
 
@@ -142,7 +143,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * face and eye detection
+     * FACIAL DETECTION
      */
     fun activateFaceDetection() {
         if (!cameraPreview.isAdded) {
@@ -173,6 +174,25 @@ class MainActivity : AppCompatActivity() {
             } else if (!turnOn && !JasiriDataHolder.eyeDetectionIsWanted.value) {
                 stopFaceDetection()
             }
+        }
+    }
+
+    /**
+     * FACE TRACKER
+     */
+    private fun faceTrackerMover() {
+        viewModel.checkFacePositionStatus.observe(this) { facePos ->
+            when (facePos) {
+                0 -> return@observe
+                1 -> controller.sendMessage("FFF")
+                2 -> controller.sendMessage("FF")
+                3 -> controller.sendMessage("F")
+                4 -> controller.sendMessage("E")
+                5 -> controller.sendMessage("EE")
+                6 -> controller.sendMessage("EEE")
+            }
+            Log.d("LogTagForTest", "FACE tracker cmd sent")
+            JasiriDataHolder.setFacePosition(0)
         }
     }
 

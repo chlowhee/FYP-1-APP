@@ -10,7 +10,6 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
 
-/** Face Detector Demo.  */
 class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptions?) :
     VisionProcessorBase<List<Face>>(context) {
 
@@ -39,8 +38,11 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
     override fun onSuccess(faces: List<Face>, graphicOverlay: GraphicOverlay) {
         for (face in faces) {
 //            graphicOverlay.add(FaceGraphic(graphicOverlay, face)) //no nd graphics
-            logExtrasForTesting(face)
-//            faceTracker(face)
+//            logExtrasForTesting(face)
+
+            if (JasiriDataHolder.faceTrackingIsWanted.value) {
+                faceTracker(face)
+            }
             if (JasiriDataHolder.eyeDetectionIsWanted.value) {
                 sleepyEyesDetector(face)
                 Log.v(MANUAL_TESTING_LOG, "eyesClosed counter: $eyesClosedCounter")
@@ -61,11 +63,36 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
         private const val sleepingThreshold = 650
         private var eyesClosedCounter = 0
 
-        private fun faceTracker(face: Face?) { //TODO
-            // Euler & closeness of face will change
-            // middleVal - ans; -ve: move left; +ve: move right
+        private fun faceTracker(face: Face?) {
             if (face == null) return
-            //maybe update results to data holder to allow controller to move
+
+            when (face.boundingBox.centerX()) {
+                in 0..100 -> {
+                    Log.d(MANUAL_TESTING_LOG, "FACE tracker: Left x3")
+                    JasiriDataHolder.setFacePosition(1)
+                }
+                in 101..159 ->{
+                    Log.d(MANUAL_TESTING_LOG, "FACE tracker: Left x2")
+                    JasiriDataHolder.setFacePosition(2)
+                }
+                in 160..210 -> {
+                    Log.d(MANUAL_TESTING_LOG, "FACE tracker: Left x1")
+                    JasiriDataHolder.setFacePosition(3)
+                }
+                in 265..300 -> {
+                    Log.d(MANUAL_TESTING_LOG, "FACE tracker: Right x1")
+                    JasiriDataHolder.setFacePosition(4)
+                }
+                in 301..355 -> {
+                    Log.d(MANUAL_TESTING_LOG, "FACE tracker: Right x2")
+                    JasiriDataHolder.setFacePosition(5)
+                }
+                in 356..500 -> {
+                    Log.d(MANUAL_TESTING_LOG, "FACE tracker: Right x3")
+                    JasiriDataHolder.setFacePosition(6)
+                }
+            }
+            JasiriDataHolder.setFaceTrackingIsWanted(false)
         }
 
         private fun sleepyEyesDetector(face: Face?) {
@@ -85,55 +112,8 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
             if (face != null) {
                 Log.v(
                     MANUAL_TESTING_LOG, //TODO: Check relative to center
-                    "face bounding box: " + face.boundingBox.flattenToString()
+                    "face bounding box: " + face.boundingBox.flattenToString() + face.boundingBox.centerX()
                 )
-//                val faceCenter = face.boundingBox.flattenToString().substring(0,3).toInt()
-//                Log.v(                            //will crash if number <100
-//                    MANUAL_TESTING_LOG,
-//                    "face bound 1 int: $faceCenter"
-//                )
-//                Log.v(
-//                    MANUAL_TESTING_LOG,
-//                    "face Euler Angle X: " + face.headEulerAngleX
-//                )
-                Log.v(  //+ve: right of cam; -ve: left of cam
-                    MANUAL_TESTING_LOG,
-                    "face Euler Angle Y: " + face.headEulerAngleY
-                )
-//                Log.v(
-//                    MANUAL_TESTING_LOG,
-//                    "face Euler Angle Z: " + face.headEulerAngleZ
-//                )
-                //TODO: REMOVE IF RLY DO NOT NEED LANDMARK POSITIONS
-                // All landmarks
-//                val landMarkTypes = intArrayOf(
-//                    FaceLandmark.RIGHT_EYE,
-//                    FaceLandmark.LEFT_EYE
-//                )
-//                val landMarkTypesStrings = arrayOf(
-//                    "RIGHT_EYE",
-//                    "LEFT_EYE"
-//                )
-//                for (i in landMarkTypes.indices) {
-//                    val landmark = face.getLandmark(landMarkTypes[i])
-//                    if (landmark == null) {
-//                        Log.v(
-//                            MANUAL_TESTING_LOG,
-//                            "No landmark of type: " + landMarkTypesStrings[i] + " has been detected"
-//                        )
-//                    } else {
-//                        val landmarkPosition = landmark.position
-//                        val landmarkPositionStr =
-//                            String.format(Locale.US, "x: %f , y: %f", landmarkPosition.x, landmarkPosition.y)
-//                        Log.v(
-//                            MANUAL_TESTING_LOG,
-//                            "Position for face landmark: " +
-//                                    landMarkTypesStrings[i] +
-//                                    " is :" +
-//                                    landmarkPositionStr
-//                        )
-//                    }
-//                }
                 Log.v(
                     MANUAL_TESTING_LOG, //TODO: left && right eye close check. Close - <0.5
                     "face left eye open probability: " + face.leftEyeOpenProbability

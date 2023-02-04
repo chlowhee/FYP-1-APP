@@ -46,6 +46,10 @@ class JasiriViewModel: ViewModel() {
         JasiriDataHolder.eyesAreSleepy.collect { emit(it) }
     }
 
+    val checkFacePositionStatus: LiveData<Int> = liveData {
+        JasiriDataHolder.facePosition.collect { emit(it) }
+    }
+
     val checkFaceTrackingStatus: LiveData<Boolean> = liveData {
         JasiriDataHolder.faceTrackingIsWanted.collect { emit(it) }
     }
