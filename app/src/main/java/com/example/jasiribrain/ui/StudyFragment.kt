@@ -343,7 +343,8 @@ class StudyFragment: Fragment() {
     private fun personSleepyCheck() {
         viewModel.checkEyeIsSleepyStatus.observe(viewLifecycleOwner) {sleepy ->
             if (sleepy) {
-                controller.sendMessage("Sleepy command")
+                controller.sendMessage(Constants.FIDGET)
+                Log.d("LogTagForTest", "EYE SLEEPY cmd sent")
                 JasiriDataHolder.setEyesAreSleepy(false)
             }
         }

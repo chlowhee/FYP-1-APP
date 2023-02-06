@@ -93,6 +93,7 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
                 }
             }
             JasiriDataHolder.setFaceTrackingIsWanted(false)
+            Log.d(MANUAL_TESTING_LOG, "FACE TRACKER off")
         }
 
         private fun sleepyEyesDetector(face: Face?) {
@@ -102,7 +103,7 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
 
             if (leftEye == null || rightEye == null) return
 
-            if ((leftEye < 0.5) && (rightEye < 0.5)) {
+            if ((leftEye < 0.4) && (rightEye < 0.4)) {
                 // eyes are closed
                 eyesClosedCounter++
             }
