@@ -3,12 +3,9 @@ package com.example.jasiribrain.facedetector
 import android.app.ActivityManager
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.GuardedBy
-import androidx.annotation.RequiresApi
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
 import com.google.android.gms.tasks.OnFailureListener
@@ -16,13 +13,10 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.android.gms.tasks.Tasks
-import com.google.android.odml.image.BitmapMlImageBuilder
-import com.google.android.odml.image.ByteBufferMlImageBuilder
 import com.google.android.odml.image.MediaMlImageBuilder
 import com.google.android.odml.image.MlImage
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.common.InputImage
-import java.nio.ByteBuffer
 import java.util.*
 
 /**
@@ -70,32 +64,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
             },
             0,
             1000
-        )
-    }
-
-    // -----------------Code for processing single still image----------------------------------------
-    override fun processBitmap(bitmap: Bitmap?, graphicOverlay: GraphicOverlay) {
-        val frameStartMs = SystemClock.elapsedRealtime()
-
-        if (isMlImageEnabled(graphicOverlay.context)) {
-            val mlImage = BitmapMlImageBuilder(bitmap!!).build()
-            requestDetectInImage(
-                mlImage,
-                graphicOverlay,
-                /* originalCameraImage= */ null,
-                /* shouldShowFps= */ false,
-                frameStartMs
-            )
-            mlImage.close()
-            return
-        }
-
-        requestDetectInImage(
-            InputImage.fromBitmap(bitmap!!, 0),
-            graphicOverlay,
-            /* originalCameraImage= */ null,
-            /* shouldShowFps= */ false,
-            frameStartMs
         )
     }
 

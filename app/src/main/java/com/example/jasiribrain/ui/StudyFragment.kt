@@ -1,7 +1,6 @@
 package com.example.jasiribrain.ui
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer

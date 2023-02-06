@@ -97,7 +97,7 @@ class CameraPreview: Fragment() {
         }
         previewUseCase = builder.build()
         previewUseCase!!.setSurfaceProvider(binding.previewView!!.getSurfaceProvider())
-        cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, previewUseCase)
+        cameraProvider!!.bindToLifecycle(this, cameraSelector!!, previewUseCase)
     }
 
     private fun bindAnalysisUseCase() {

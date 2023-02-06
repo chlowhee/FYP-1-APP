@@ -112,11 +112,11 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
         private fun logExtrasForTesting(face: Face?) {
             if (face != null) {
                 Log.v(
-                    MANUAL_TESTING_LOG, //TODO: Check relative to center
+                    MANUAL_TESTING_LOG,
                     "face bounding box: " + face.boundingBox.flattenToString() + face.boundingBox.centerX()
                 )
                 Log.v(
-                    MANUAL_TESTING_LOG, //TODO: left && right eye close check. Close - <0.5
+                    MANUAL_TESTING_LOG,
                     "face left eye open probability: " + face.leftEyeOpenProbability
                 )
                 Log.v(

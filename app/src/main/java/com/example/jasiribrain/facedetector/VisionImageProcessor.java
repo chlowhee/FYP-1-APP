@@ -7,9 +7,6 @@ import java.nio.ByteBuffer;
 
 public interface VisionImageProcessor {
 
-    /** Processes a bitmap image. */
-    void processBitmap(Bitmap bitmap, GraphicOverlay graphicOverlay);
-
     /** Processes ImageProxy image data, e.g. used for CameraX live preview case. */
     void processImageProxy(ImageProxy image, GraphicOverlay graphicOverlay) throws MlKitException;
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
@@ -18,9 +19,9 @@ import com.example.jasiribrain.databinding.ActivityMainBinding
 import com.example.jasiribrain.facedetector.CameraPreview
 import com.example.jasiribrain.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.S)
 private val REQUIRED_PERMISSION_LIST = arrayOf(
     Manifest.permission.BLUETOOTH,
     Manifest.permission.BLUETOOTH_ADMIN,
