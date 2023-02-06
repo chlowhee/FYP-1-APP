@@ -6,15 +6,15 @@ import kotlinx.coroutines.flow.StateFlow
 object JasiriDataHolder {
 
     /**
-     * monitor study mode timer running
+     * monitor if timer in StudyFragment is running
      */
-    private val _studyActiveStatus = MutableStateFlow(false)
+    private val _timerActiveStatus = MutableStateFlow(false)
 
-    val studyActiveStatus: StateFlow<Boolean>
-        get() = _studyActiveStatus
+    val timerActiveStatus: StateFlow<Boolean>
+        get() = _timerActiveStatus
 
-    fun setStudyIsActiveStatus(status: Boolean) {
-        _studyActiveStatus.value = status
+    fun setTimerIsActiveStatus(status: Boolean) {
+        _timerActiveStatus.value = status
     }
 
     /**
@@ -56,6 +56,7 @@ object JasiriDataHolder {
     /**
      * monitor number of cycles chosen
      */
+    // To retain originally set value
     private val _numCyclesSet = MutableStateFlow(1)
 
     val numCyclesSet: StateFlow<Int>
@@ -65,7 +66,7 @@ object JasiriDataHolder {
         _numCyclesSet.value = status
     }
 
-    // numCyclesSet for retaining originally set value. numCyclesCounter for counting down
+    // To count down number of cycles left
     private val _numCyclesCounter = MutableStateFlow(1)
 
     val numCyclesCounter: StateFlow<Int>
@@ -112,7 +113,7 @@ object JasiriDataHolder {
     }
 
     /**
-     * rpiReadyStatus: check if RPi is ready to accept nxt cmd
+     * check if RPi is ready to accept nxt cmd
      */
     private val _rpiReadyStatus = MutableStateFlow(false)
 
@@ -121,6 +122,54 @@ object JasiriDataHolder {
 
     fun setRpiIsReadyStatus(status: Boolean) {
         _rpiReadyStatus.value = status
+    }
+
+    /**
+     * toggle if eye detection is wanted
+     */
+    private val _eyeDetectionIsWanted = MutableStateFlow(false)
+
+    val eyeDetectionIsWanted: StateFlow<Boolean>
+        get() = _eyeDetectionIsWanted
+
+    fun setEyeDetectionIsWanted(status: Boolean) {
+        _eyeDetectionIsWanted.value = status
+    }
+
+    /**
+     * to check if eye is sleepy
+     */
+    private val _eyesAreSleepy = MutableStateFlow(false)
+
+    val eyesAreSleepy: StateFlow<Boolean>
+        get() = _eyesAreSleepy
+
+    fun setEyesAreSleepy(status: Boolean) {
+        _eyesAreSleepy.value = status
+    }
+
+    /**
+     * toggle if face tracking is wanted
+     */
+    private val _faceTrackingIsWanted = MutableStateFlow(false)
+
+    val faceTrackingIsWanted: StateFlow<Boolean>
+        get() = _faceTrackingIsWanted
+
+    fun setFaceTrackingIsWanted(status: Boolean) {
+        _faceTrackingIsWanted.value = status
+    }
+
+    /**
+     *  for face tracking
+     */
+    private val _facePosition = MutableStateFlow(0)
+
+    val facePosition: StateFlow<Int>
+        get() = _facePosition
+
+    fun setFacePosition(status: Int) {
+        _facePosition.value = status
     }
 
 }

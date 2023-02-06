@@ -7,26 +7,29 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import com.example.jasiribrain.R
 import com.example.jasiribrain.bluetooth.BluetoothController
-import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.JasiriDataHolder
 import com.example.jasiribrain.data.JasiriViewModel
 import com.example.jasiribrain.databinding.ActivityMainBinding
+import com.example.jasiribrain.facedetector.CameraPreview
 import com.example.jasiribrain.utils.getMissingPermissions
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.S)
 private val REQUIRED_PERMISSION_LIST = arrayOf(
     Manifest.permission.BLUETOOTH,
     Manifest.permission.BLUETOOTH_ADMIN,
     Manifest.permission.BLUETOOTH_CONNECT,
     Manifest.permission.BLUETOOTH_SCAN,
-    Manifest.permission.ACCESS_FINE_LOCATION
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.ACCESS_COARSE_LOCATION,
+    Manifest.permission.CAMERA
 )
 private const val REQUEST_PERMISSION_CODE = 12345
 
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val studyFrag = StudyFragment()
     private val homeFrag = HomeFragment()
     private lateinit var currFrag: Fragment
+    private val cameraPreview = CameraPreview()
 
     private val viewModel: JasiriViewModel by viewModels()
     @Inject lateinit var controller: BluetoothController
@@ -58,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         checkAndRequestPermissions()
         bottomNavSelect()
         bottomNavEnabled()
+        toggleFaceDetection()
+        faceTrackerMover()
         pingRpiEveryFiveMinutes()
     }
 
@@ -111,7 +117,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun bottomNavSelect() {
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
-            if (JasiriDataHolder.studyActiveStatus.value == false) {
+            if (!JasiriDataHolder.timerActiveStatus.value) {
                 when (it.itemId) {
                     R.id.study -> {
                         setCurrentFragment(studyFrag)
@@ -137,17 +143,71 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun pingRpiEveryFiveMinutes() { //can forgo
-        val timerObj = Timer()
-        val timerTaskObj: TimerTask = object : TimerTask() {
-            override fun run() {
-                if (JasiriDataHolder.bluetoothActiveStatus.value) {
-                    controller.sendMessage("ping")
-                    Log.d("PING", "send ping")
-                }
+    /**
+     * FACIAL DETECTION
+     */
+    fun activateFaceDetection() {
+        if (!cameraPreview.isAdded) {
+            supportFragmentManager.beginTransaction().replace(R.id.camera_preview, cameraPreview)
+                .commit()
+        }
+    }
+
+    fun stopFaceDetection() {
+        if (cameraPreview.isAdded) {
+            supportFragmentManager.beginTransaction().remove(cameraPreview).commit()
+        }
+    }
+
+    private fun toggleFaceDetection() {
+        viewModel.checkEyeDetectionStatus.observe(this) { turnOn ->
+            if (turnOn) {
+                activateFaceDetection()
+                Log.d("LogTagForTest", "toggle ON face detection")
+            } else {
+                stopFaceDetection()
+                Log.d("LogTagForTest", "toggle OFF face detection")
             }
         }
-        timerObj.schedule(timerTaskObj, 0, 30000)
+        viewModel.checkFaceTrackingStatus.observe(this) { turnOn ->
+            if (turnOn) {
+                activateFaceDetection()
+            } else if (!turnOn && !JasiriDataHolder.eyeDetectionIsWanted.value) {
+                stopFaceDetection()
+            }
+        }
+    }
+
+    /**
+     * FACE TRACKER
+     */
+    private fun faceTrackerMover() {
+        viewModel.checkFacePositionStatus.observe(this) { facePos ->
+            when (facePos) {
+                0 -> return@observe
+                1 -> controller.sendMessage("FFF")
+                2 -> controller.sendMessage("FF")
+                3 -> controller.sendMessage("F")
+                4 -> controller.sendMessage("E")
+                5 -> controller.sendMessage("EE")
+                6 -> controller.sendMessage("EEE")
+            }
+            Log.d("LogTagForTest", "FACE tracker cmd sent")
+            JasiriDataHolder.setFacePosition(0)
+        }
+    }
+
+    private fun pingRpiEveryFiveMinutes() { //can forgo
+//        val timerObj = Timer()
+//        val timerTaskObj = object : TimerTask() {
+//            override fun run() {
+//                if (JasiriDataHolder.bluetoothActiveStatus.value) {
+//                    controller.sendMessage("ping")
+//                    Log.d("PING", "send ping")
+//                }
+//            }
+//        }
+//        timerObj.schedule(timerTaskObj, 0, 30000)
     }
 }
 

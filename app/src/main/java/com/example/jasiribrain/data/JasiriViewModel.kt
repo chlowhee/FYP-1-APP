@@ -1,10 +1,8 @@
 package com.example.jasiribrain.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import kotlinx.coroutines.flow.collect
 
 class JasiriViewModel: ViewModel() {
 
@@ -13,7 +11,7 @@ class JasiriViewModel: ViewModel() {
     }
 
     val isStudyingStatus: LiveData<Boolean> = liveData {
-            JasiriDataHolder.studyActiveStatus.collect{emit(it)}
+            JasiriDataHolder.timerActiveStatus.collect{emit(it)}
     }
 
     val studyMethodStatus: LiveData<Int> = liveData {
@@ -38,6 +36,22 @@ class JasiriViewModel: ViewModel() {
 
     val getRpiReadyStatus: LiveData<Boolean> = liveData {
         JasiriDataHolder.rpiReadyStatus.collect{emit(it)}
+    }
+
+    val checkEyeDetectionStatus: LiveData<Boolean> = liveData {
+        JasiriDataHolder.eyeDetectionIsWanted.collect { emit(it) }
+    }
+
+    val checkEyeIsSleepyStatus: LiveData<Boolean> = liveData {
+        JasiriDataHolder.eyesAreSleepy.collect { emit(it) }
+    }
+
+    val checkFacePositionStatus: LiveData<Int> = liveData {
+        JasiriDataHolder.facePosition.collect { emit(it) }
+    }
+
+    val checkFaceTrackingStatus: LiveData<Boolean> = liveData {
+        JasiriDataHolder.faceTrackingIsWanted.collect { emit(it) }
     }
 
 }
