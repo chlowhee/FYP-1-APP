@@ -114,6 +114,12 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
 
     @SuppressLint("SetTextI18n")
     override fun onCommunicate(message: String?) {
+        if (message != null) {
+            if (message.toDoubleOrNull() != null) {
+                JasiriDataHolder.setReactionTiming(message)
+                Log.d("GameFrag", "Reaction Timing: $message")
+            }
+        }
         when (message) {
             "K" -> {
                 Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
@@ -124,7 +130,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                     JasiriDataHolder.setFaceTrackingIsWanted(false)
                 }
             }
-            "P" -> {
+            "N" -> {
                 Log.d("LogTagForTest", "Activate Face Tracking")
                 JasiriDataHolder.setFaceTrackingIsWanted(true)
             }
@@ -135,6 +141,14 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
             "Q" -> {
                 JasiriDataHolder.setRpiIsReadyStatus(false)
                 Log.d("RPI STATUS", "RPI NOT ready to transport")
+            }
+            "p" -> {
+                JasiriDataHolder.setHasuserReacted(true)
+                Log.d("GAME", "User reacted! Waiting for results...")
+            }
+            "f" -> {
+                JasiriDataHolder.setReactionTiming("f")
+                Log.d("GAME", "User never react")
             }
         }
     }

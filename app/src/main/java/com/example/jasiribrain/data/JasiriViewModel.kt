@@ -54,4 +54,12 @@ class JasiriViewModel: ViewModel() {
         JasiriDataHolder.faceTrackingIsWanted.collect { emit(it) }
     }
 
+    val hasUserReactedStatus: LiveData<Boolean> = liveData {
+        JasiriDataHolder.hasUserReacted.collect { emit(it) }
+    }
+
+    val updateReactionTiming: LiveData<String> = liveData {
+        JasiriDataHolder.reactionTiming.collect { emit(it) }
+    }
+
 }

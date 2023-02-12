@@ -157,14 +157,14 @@ class StudyFragment: Fragment() {
                 if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL) {
                     timerEndAction()
                     JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
-                    toggleEyeDetectionEveryFiveMins()
+                    toggleEyeDetectionEveryTwoMins()
                 }
                 displayTimerInit()
             }
         }.start()
         JasiriDataHolder.setTimerIsActiveStatus(true)
         if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL) {
-            toggleEyeDetectionEveryFiveMins()
+            toggleEyeDetectionEveryTwoMins()
         }
         Log.d(TAG, "timer started")
         binding.timerStartButton.text = getString(R.string.stop)
@@ -179,7 +179,7 @@ class StudyFragment: Fragment() {
             JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
             displayTimerInit()
             JasiriDataHolder.setTimerIsActiveStatus(false)
-            toggleEyeDetectionEveryFiveMins()
+            toggleEyeDetectionEveryTwoMins()
             Log.d(TAG, "timer stopped")
             binding.timerStartButton.text = getString(R.string.start)
         }
@@ -202,7 +202,7 @@ class StudyFragment: Fragment() {
                 Log.d(TAG, "timer stopped")
                 binding.timerStartButton.text = getString(R.string.start)
                 displayTimerInit()
-                toggleEyeDetectionEveryFiveMins()
+                toggleEyeDetectionEveryTwoMins()
                 toggleEyeD = false
             }
             .setNegativeButton("No") { dialog, id ->
@@ -281,6 +281,7 @@ class StudyFragment: Fragment() {
         when (time) {
             10L -> {
                 Log.d(TAG, "ROBOT FIDGET")
+                //TODO: run on ui thread
                 val tenMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.ten_mins_left)
                 tenMinReminder.start()
                 controller.sendMessage(Constants.FIDGET)
@@ -295,7 +296,6 @@ class StudyFragment: Fragment() {
     }
 
     private fun timerEndAction() {
-        //TODO
         if (JasiriDataHolder.isPomodoroBreak.value) {   //after break end
             JasiriDataHolder.setNumCyclesCounter(JasiriDataHolder.numCyclesCounter.value-1)
             Log.d(TAG, "ROBO DANCE AND SAY TIME FOR NEXT CYCLE")
@@ -312,7 +312,7 @@ class StudyFragment: Fragment() {
     /**
      * EYE DETECTION
      */
-    private fun toggleEyeDetectionEveryFiveMins() {
+    private fun toggleEyeDetectionEveryTwoMins() {
         if (!JasiriDataHolder.isPomodoroBreak.value && JasiriDataHolder.timerActiveStatus.value){
             toggleEyeD = true
         }
@@ -327,12 +327,12 @@ class StudyFragment: Fragment() {
                     }
                     toggleEyeD = !toggleEyeD
 
-                    Log.d("LogTagForTest", "toggle ON eye detection every 5 mins")
+                    Log.d("LogTagForTest", "toggle ON eye detection every 2 mins")
                 } else {
                     JasiriDataHolder.setEyeDetectionIsWanted(false)
                     timerObj.cancel()
                     timerObj.purge()
-                    Log.d("LogTagForTest", "toggle OFF eye detection every 5 mins")
+                    Log.d("LogTagForTest", "toggle OFF eye detection every 2 mins")
                 }
             }
         }

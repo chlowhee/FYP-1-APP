@@ -172,4 +172,28 @@ object JasiriDataHolder {
         _facePosition.value = status
     }
 
+    /**
+     *  monitor if jasiri button is pressed for reaction time game
+     */
+    private val _hasUserReacted = MutableStateFlow(false)
+
+    val hasUserReacted: StateFlow<Boolean>
+        get() = _hasUserReacted
+
+    fun setHasuserReacted(status: Boolean) {
+        _hasUserReacted.value = status
+    }
+
+    /**
+     *  update reaction timing
+     */
+    private val _reactionTiming = MutableStateFlow("0")
+
+    val reactionTiming: StateFlow<String>
+        get() = _reactionTiming
+
+    fun setReactionTiming(status: String) {
+        _reactionTiming.value = status
+    }
+
 }
