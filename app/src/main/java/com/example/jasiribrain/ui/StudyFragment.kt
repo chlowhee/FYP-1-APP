@@ -67,26 +67,14 @@ class StudyFragment: Fragment() {
                 with (binding) {
                     pomodoroTitleUnselected.setOnClickListener {
                         JasiriDataHolder.setStudyMethodSelect(Constants.POMODORO_SEL)
-//                studyFragOpener(studyMethodFrag)
                     }
-//            gtdBtn.setOnClickListener {
-//                JasiriDataHolder.setStudyMethodSelect(Constants.GTD_SEL)
-//                studyFragOpener(studyMethodFrag)
-//            }
                     forceStartTitleUnselected.setOnClickListener {
                         JasiriDataHolder.setStudyMethodSelect(Constants.FORCE_START_SEL)
-//                studyFragOpener(studyMethodFrag)
                     }
                 }
             }
         }
     }
-
-//    private fun studyFragOpener(fragment: Fragment) {
-//        childFragmentManager.beginTransaction()
-//            .replace(R.id.methodFragment, fragment)
-//            .commitNow()
-//    }
 
     private fun studyMethodUiInit() {
         viewModel.studyMethodStatus.observe(viewLifecycleOwner) { sel ->
@@ -142,7 +130,7 @@ class StudyFragment: Fragment() {
 
             override fun onTick(millisUntilFinished: Long) {
                 mTimeLeftMillis = millisUntilFinished
-                if (binding.studyTimer.text == "10:01" || binding.studyTimer.text == "05:01") {
+                if (binding.studyTimer.text == "10:02" || binding.studyTimer.text == "05:02") {
                     Log.d(TAG, "${mTimeLeftMillis/Constants.MINUTE_IN_MILLIS} minutes left")
                     timerMonitorer(mTimeLeftMillis/Constants.MINUTE_IN_MILLIS)
                 }
@@ -163,7 +151,8 @@ class StudyFragment: Fragment() {
             }
         }.start()
         JasiriDataHolder.setTimerIsActiveStatus(true)
-        if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL) {
+        if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL && !JasiriDataHolder.isPomodoroBreak.value) {
+            toggleEyeD = true
             toggleEyeDetectionEveryTwoMins()
         }
         Log.d(TAG, "timer started")
@@ -179,7 +168,6 @@ class StudyFragment: Fragment() {
             JasiriDataHolder.setIsPomodoroBreak(!JasiriDataHolder.isPomodoroBreak.value)
             displayTimerInit()
             JasiriDataHolder.setTimerIsActiveStatus(false)
-            toggleEyeDetectionEveryTwoMins()
             Log.d(TAG, "timer stopped")
             binding.timerStartButton.text = getString(R.string.start)
         }
@@ -202,8 +190,8 @@ class StudyFragment: Fragment() {
                 Log.d(TAG, "timer stopped")
                 binding.timerStartButton.text = getString(R.string.start)
                 displayTimerInit()
-                toggleEyeDetectionEveryTwoMins()
                 toggleEyeD = false
+                toggleEyeDetectionEveryTwoMins()
             }
             .setNegativeButton("No") { dialog, id ->
                 startTimer()
@@ -280,16 +268,22 @@ class StudyFragment: Fragment() {
         if (JasiriDataHolder.isPomodoroBreak.value) return
         when (time) {
             10L -> {
-                Log.d(TAG, "ROBOT FIDGET")
-                //TODO: run on ui thread
-                val tenMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.ten_mins_left)
-                tenMinReminder.start()
+                toggleEyeD = false
+                toggleEyeDetectionEveryTwoMins()
+                requireActivity().runOnUiThread {
+                    val tenMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.ten_mins_left)
+                    tenMinReminder.start()
+                }
                 controller.sendMessage(Constants.FIDGET)
             }
             5L -> {
-                Log.d(TAG, "ROBOT DANCE")
-                val fiveMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.five_mins_left)
-                fiveMinReminder.start()
+                toggleEyeD = false
+                toggleEyeDetectionEveryTwoMins()
+                requireActivity().runOnUiThread {
+                    val fiveMinReminder: MediaPlayer =
+                        MediaPlayer.create(activity, R.raw.five_mins_left)
+                    fiveMinReminder.start()
+                }
                 controller.sendMessage(Constants.FIDGET)
             }
         }
@@ -313,26 +307,23 @@ class StudyFragment: Fragment() {
      * EYE DETECTION
      */
     private fun toggleEyeDetectionEveryTwoMins() {
-        if (!JasiriDataHolder.isPomodoroBreak.value && JasiriDataHolder.timerActiveStatus.value){
-            toggleEyeD = true
-        }
         val timerObj = Timer()
         val timerTaskObj = object : TimerTask() {
             override fun run() {
                 if (!JasiriDataHolder.isPomodoroBreak.value && JasiriDataHolder.timerActiveStatus.value) {
                     if(toggleEyeD) {
                         JasiriDataHolder.setEyeDetectionIsWanted(true)
+                        Log.d("LogTagForTest", "toggle ON eye detection every 2 mins")
                     } else {
                         JasiriDataHolder.setEyeDetectionIsWanted(false)
+                        Log.d("LogTagForTest", "toggle OFF eye detection every 2 mins")
                     }
                     toggleEyeD = !toggleEyeD
-
-                    Log.d("LogTagForTest", "toggle ON eye detection every 2 mins")
                 } else {
                     JasiriDataHolder.setEyeDetectionIsWanted(false)
                     timerObj.cancel()
                     timerObj.purge()
-                    Log.d("LogTagForTest", "toggle OFF eye detection every 2 mins")
+                    Log.d("LogTagForTest", "toggle PURGE eye detection every 2 mins")
                 }
             }
         }

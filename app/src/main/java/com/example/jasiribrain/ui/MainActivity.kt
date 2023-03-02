@@ -191,6 +191,7 @@ class MainActivity : AppCompatActivity() {
                 4 -> controller.sendMessage("E")
                 5 -> controller.sendMessage("EE")
                 6 -> controller.sendMessage("EEE")
+                7 -> controller.sendMessage("I")
             }
             Log.d("LogTagForTest", "FACE tracker cmd sent")
             JasiriDataHolder.setFacePosition(0)

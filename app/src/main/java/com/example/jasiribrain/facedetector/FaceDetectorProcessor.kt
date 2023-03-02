@@ -36,6 +36,15 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
     }
 
     override fun onSuccess(faces: List<Face>, graphicOverlay: GraphicOverlay) {
+        if (faces.isEmpty() && JasiriDataHolder.faceTrackingIsWanted.value) {
+            Log.v(MANUAL_TESTING_LOG, "no face")
+            noFaceDetected()
+            return
+        } else {
+            cmd = true
+            noFaceDetected()
+        }
+
         for (face in faces) {
 //            graphicOverlay.add(FaceGraphic(graphicOverlay, face)) //no nd graphics
 //            logExtrasForTesting(face)
@@ -62,9 +71,29 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
         private const val TAG = "FaceDetectorProcessor"
         private const val sleepingThreshold = 650
         private var eyesClosedCounter = 0
+        private var faceCounter = 0
+        private var cmd = false
+
+        private fun noFaceDetected() {
+            Log.v(MANUAL_TESTING_LOG, "Enter noFaceDetected.")
+            if (cmd) {
+                faceCounter = 0
+                cmd = false
+                Log.v(MANUAL_TESTING_LOG, "face NOW detected!")
+                return
+            } else if (faceCounter == 22 && !cmd) {
+                JasiriDataHolder.setFacePosition(7)
+                faceCounter = 0
+                Log.v(MANUAL_TESTING_LOG, "No face send cmd!")
+            } else {
+                faceCounter++
+            }
+            Log.v(MANUAL_TESTING_LOG, "faceCounter: $faceCounter $cmd")
+        }
 
         private fun faceTracker(face: Face?) {
             if (face == null) return
+            faceCounter = 0
 
             when (face.boundingBox.centerX()) {
                 in 0..100 -> {
