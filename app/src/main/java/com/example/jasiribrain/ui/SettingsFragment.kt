@@ -18,8 +18,6 @@ import com.example.jasiribrain.common.BluetoothStatusListener
 import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.DataStoreRepo
 import com.example.jasiribrain.data.JasiriDataHolder
-import com.example.jasiribrain.data.JasiriViewModel
-//import androidx.fragment.app.viewModels
 import com.example.jasiribrain.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -74,7 +72,6 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                 binding.bluetoothOnOff.text = getString(R.string.off)
             }
         }
-//        JasiriDataHolder.bluetoothActiveStatus.ob
     }
 
     @SuppressLint("SetTextI18n")
@@ -109,6 +106,7 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
                 BluetoothChatService.STATE_NONE -> {
                     text = getString(R.string.no_devices_connected)
                     btConnected = false
+                    JasiriDataHolder.setBluetoothIsActiveStatus(false)
                 }
             }
         }
@@ -116,11 +114,25 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
 
     @SuppressLint("SetTextI18n")
     override fun onCommunicate(message: String?) {
+        if (message != null) {
+            if (message.toDoubleOrNull() != null) {
+                JasiriDataHolder.setReactionTiming(message)
+                Log.d("GameFrag", "Reaction Timing: $message")
+            }
+        }
         when (message) {
             "K" -> {
                 Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
                 binding.getPairedStatus.text = "Connected: " + controller.connectedDeviceName
-                controller.sendMessage(Constants.PING) //TODO: Make a function to ping rpi every 2 mins
+//                controller.sendMessage(Constants.PING)
+                JasiriDataHolder.setBluetoothIsActiveStatus(true)
+                if (JasiriDataHolder.faceTrackingIsWanted.value) {
+                    JasiriDataHolder.setFaceTrackingIsWanted(false)
+                }
+            }
+            "N" -> {
+                Log.d("LogTagForTest", "Activate Face Tracking")
+                JasiriDataHolder.setFaceTrackingIsWanted(true)
             }
             "Z" -> {
                 JasiriDataHolder.setRpiIsReadyStatus(true)
@@ -129,6 +141,14 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
             "Q" -> {
                 JasiriDataHolder.setRpiIsReadyStatus(false)
                 Log.d("RPI STATUS", "RPI NOT ready to transport")
+            }
+            "p" -> {
+                JasiriDataHolder.setHasuserReacted(true)
+                Log.d("GAME", "User reacted! Waiting for results...")
+            }
+            "f" -> {
+                JasiriDataHolder.setReactionTiming("f")
+                Log.d("GAME", "User never react")
             }
         }
     }

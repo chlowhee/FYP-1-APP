@@ -47,5 +47,8 @@ interface Constants {
         const val LEFT = "D"
         const val FIDGET = "G"
         const val DANCE = "H"
+        const val GAME = "L"
+        const val GOOD_COP = "U"
+        const val BAD_COP = "V"
     }
 }

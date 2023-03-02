@@ -49,6 +49,7 @@ public class BluetoothController {
         this.listeners.remove(listener);
     }
 
+    @SuppressLint("MissingPermission")
     public void setEnabled(boolean enabling){
         if (enabling){
             btAdapter.enable();

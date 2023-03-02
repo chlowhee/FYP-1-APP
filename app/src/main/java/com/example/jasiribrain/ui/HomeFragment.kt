@@ -5,8 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.jasiribrain.R
 import com.example.jasiribrain.bluetooth.BluetoothController
 import com.example.jasiribrain.data.Constants
 import com.example.jasiribrain.data.JasiriDataHolder
@@ -22,7 +24,8 @@ class HomeFragment: Fragment() {
     private val binding get() = _binding!!
     val TAG = "homeFrag"
 
-    val viewModel: JasiriViewModel by viewModels()
+    private val gameFragment = GameFragment()
+    private val viewModel: JasiriViewModel by viewModels()
     @Inject lateinit var controller: BluetoothController
 
     private var prevCmd = Constants.DEFAULT
@@ -38,8 +41,38 @@ class HomeFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        freeMotivationInit()
+        playAndDanceButtonInit()
         joystickControllerInit()
         jasiriMove()
+    }
+
+    private fun freeMotivationInit() {
+        with(binding) {
+            goodCopButton.setOnClickListener {
+                controller.sendMessage(Constants.GOOD_COP)
+            }
+
+            badCopButton.setOnClickListener {
+                controller.sendMessage(Constants.BAD_COP)
+            }
+        }
+    }
+
+    private fun playAndDanceButtonInit() {
+        binding.playButton.setOnClickListener {
+            Log.d(TAG, "Play Button pressed")
+            if (JasiriDataHolder.bluetoothActiveStatus.value) {
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.methodFragment_home, gameFragment).commitNow()
+            } else {
+                Toast.makeText(activity, "Jasiri is not connected!", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.danceButton.setOnClickListener {
+            Log.d(TAG, "Dance Button pressed")
+            controller.sendMessage(Constants.DANCE)
+        }
     }
 
     private fun joystickControllerInit() {
