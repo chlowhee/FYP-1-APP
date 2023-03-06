@@ -1,5 +1,6 @@
 package com.example.jasiribrain.ui
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -51,10 +52,14 @@ class HomeFragment: Fragment() {
         with(binding) {
             goodCopButton.setOnClickListener {
                 controller.sendMessage(Constants.GOOD_COP)
+                val goodCopVoice: MediaPlayer = MediaPlayer.create(activity, R.raw.good_cop_audio)
+                goodCopVoice.start()
             }
 
             badCopButton.setOnClickListener {
                 controller.sendMessage(Constants.BAD_COP)
+                val badCopVoice: MediaPlayer = MediaPlayer.create(activity, R.raw.bad_cop_audio)
+                badCopVoice.start()
             }
         }
     }

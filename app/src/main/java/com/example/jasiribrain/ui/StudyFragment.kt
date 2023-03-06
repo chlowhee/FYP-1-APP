@@ -396,10 +396,14 @@ class StudyFragment: Fragment() {
         with (binding) {
             goodCopButtonBreak.setOnClickListener {
                 controller.sendMessage(Constants.GOOD_COP)
+                val goodCopVoice: MediaPlayer = MediaPlayer.create(activity, R.raw.good_cop_audio)
+                goodCopVoice.start()
             }
 
             badCopButtonBreak.setOnClickListener {
                 controller.sendMessage(Constants.BAD_COP)
+                val badCopVoice: MediaPlayer = MediaPlayer.create(activity, R.raw.bad_cop_audio)
+                badCopVoice.start()
             }
         }
     }
