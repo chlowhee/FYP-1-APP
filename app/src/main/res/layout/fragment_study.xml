@@ -125,101 +125,120 @@
         app:layout_constraintStart_toStartOf="@id/pomodoro_title_selected"
         app:layout_constraintTop_toBottomOf="@id/pomodoro_title_selected"/>
 
-    <Button
-        android:id="@+id/force_star_tester"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:backgroundTint="@color/silver"
-        android:text="START CAM"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/haptic_1"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <Button
-        android:id="@+id/force_star_tester_2"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:backgroundTint="@color/silver"
-        android:text="stop cam"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/force_star_tester"
-        app:layout_constraintBottom_toTopOf="@+id/force_star_tester"/>
-
-    <Button
-        android:id="@+id/haptic_1"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:backgroundTint="@color/red"
-        android:background="@drawable/circle_button"
-        android:text="HAP 1"
-        android:hapticFeedbackEnabled="true"
-        app:layout_constraintStart_toEndOf="@id/force_star_tester"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-<!--    <TextView-->
-<!--        android:id="@+id/study_title"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="15dp"-->
-<!--        android:text="@string/study_title"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textSize="25sp"-->
-<!--        android:textStyle="bold"-->
-<!--        android:gravity="center"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
 <!--    <Button-->
-<!--        android:id="@+id/pomodoro_btn"-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="100dp"-->
+<!--        android:id="@+id/force_star_tester"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="150dp"-->
 <!--        android:backgroundTint="@color/silver"-->
-<!--        android:text="@string/pomodoro_method"-->
+<!--        android:text="START CAM"-->
 <!--        android:textColor="@color/black"-->
-<!--        android:textSize="20sp"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/gtd_btn"/>-->
-
-<!--    <Button-->
-<!--        android:id="@+id/gtd_btn"-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:backgroundTint="@color/silver"-->
-<!--        android:text="@string/getting_things_done_method"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="20sp"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/pomodoro_btn"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/force_start_btn"/>-->
-
-<!--    <Button-->
-<!--        android:id="@+id/force_start_btn"-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:backgroundTint="@color/silver"-->
-<!--        android:text="@string/force_start_title"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="20sp"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/gtd_btn"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/haptic_1"-->
 <!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/methodFragment"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:elevation="20dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.5"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/descriptorinator"/>-->
+<!--    <Button-->
+<!--        android:id="@+id/force_star_tester_2"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:backgroundTint="@color/silver"-->
+<!--        android:text="stop cam"-->
+<!--        android:textColor="@color/black"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/force_star_tester"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/force_star_tester"/>-->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/haptic_1"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginBottom="120dp"
+        android:background="@drawable/circle_button"
+        android:hapticFeedbackEnabled="true"
+        android:text="o.o"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/haptic_2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/haptic_2"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:background="@drawable/circle_button"
+        android:text="-_-"
+        android:textSize="60sp"
+        android:textColor="@color/white"
+        android:hapticFeedbackEnabled="true"
+        app:layout_constraintStart_toEndOf="@+id/haptic_1"
+        app:layout_constraintEnd_toStartOf="@+id/haptic_3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="120dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/haptic_3"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:background="@drawable/circle_button"
+        android:text="{0_0}"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        android:hapticFeedbackEnabled="true"
+        app:layout_constraintStart_toEndOf="@+id/haptic_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="120dp"/>
+
+    <ImageButton
+        android:id="@+id/play_button_break"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/play_button_border"
+        android:src="@drawable/ic_game_ctrl"
+        android:scaleType="centerCrop"
+        android:padding="20dp"
+        android:text="@string/dance"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/motivation_buttons_break"
+        app:layout_constraintTop_toBottomOf="@+id/haptic_2"/>
+
+    <LinearLayout
+        android:id="@+id/motivation_buttons_break"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/haptic_2"
+        app:layout_constraintEnd_toStartOf="@id/play_button_break">
+
+        <Button
+            android:id="@+id/good_cop_button_break"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:backgroundTint="@color/pastel_green"
+            android:text="@string/good_cop"
+            />
+
+        <Button
+            android:id="@+id/bad_cop_button_break"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:backgroundTint="@color/pastel_red"
+            android:text="@string/bad_cop"
+            />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/methodFragment_study"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/descriptorinator"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

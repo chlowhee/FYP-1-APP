@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.jasiribrain.R
@@ -27,6 +28,7 @@ class StudyFragment: Fragment() {
     private val binding get() = _binding!!
     private val TAG = "studyFragment"
 
+    private val gameFragment = GameFragment()
     private val pomodoroSettingDialog = PomodoroSettingDialog()
     @Inject lateinit var controller: BluetoothController
     private val viewModel: JasiriViewModel by viewModels()
@@ -49,14 +51,21 @@ class StudyFragment: Fragment() {
         studyMethodCheck()
 
         studyMethodUiInit()
+        buttonClick()
         timeStartInit()
-        testbtnInit()
-        testbtn2Init()
+//        testbtnInit()
+//        testbtn2Init()
         pomodoroSettingsInit()
         pomoSettingsSet()
         cyclesLeftSet()
         personSleepyCheck()
+        playButtonInitStudy()
+        freeMotivationInitStudy()
     }
+
+    /**
+     * UI Initializations
+     */
 
     private fun studyMethodCheck() {
         viewModel.isStudyingStatus.observe(viewLifecycleOwner) { yes ->
@@ -78,13 +87,16 @@ class StudyFragment: Fragment() {
 
     private fun studyMethodUiInit() {
         viewModel.studyMethodStatus.observe(viewLifecycleOwner) { sel ->
-            binding.run {
+            with (binding) {
                 when (sel) {
                     Constants.POMODORO_SEL -> {
                         pomodoroTitleSelected.visibility = View.VISIBLE
                         pomodoroTitleUnselected.visibility = View.INVISIBLE
                         forceStartTitleSelected.visibility = View.INVISIBLE
                         forceStartTitleUnselected.visibility = View.VISIBLE
+                        haptic1.visibility = View.VISIBLE
+                        haptic2.visibility = View.VISIBLE
+                        haptic3.visibility = View.VISIBLE
 
                         cyclesLeftDescript.visibility = View.VISIBLE
                         timerSettings.visibility = View.VISIBLE
@@ -94,6 +106,11 @@ class StudyFragment: Fragment() {
                         forceStartTitleUnselected.visibility = View.INVISIBLE
                         pomodoroTitleSelected.visibility = View.INVISIBLE
                         pomodoroTitleUnselected.visibility = View.VISIBLE
+                        haptic1.visibility = View.INVISIBLE
+                        haptic2.visibility = View.INVISIBLE
+                        haptic3.visibility = View.INVISIBLE
+                        playButtonBreak.visibility = View.INVISIBLE
+                        motivationButtonsBreak.visibility = View.INVISIBLE
 
                         descriptorinator.text = getString(R.string.jump_start_your_brain)
                         cyclesLeftDescript.visibility = View.INVISIBLE
@@ -103,6 +120,21 @@ class StudyFragment: Fragment() {
                 displayTimerInit()
             }
         }
+    }
+
+    private fun buttonClick(){
+        with (binding) {
+            haptic1.setOnClickListener {
+                val buttonClicked: MediaPlayer = MediaPlayer.create(activity, R.raw.button_click)
+                buttonClicked.start()
+            }
+            haptic3.setOnClickListener {
+                val buttonClicked: MediaPlayer = MediaPlayer.create(activity, R.raw.button_click)
+                buttonClicked.start()
+            }
+        }
+
+
     }
 
     private fun timeStartInit() {
@@ -209,10 +241,14 @@ class StudyFragment: Fragment() {
             if (!JasiriDataHolder.isPomodoroBreak.value) {
                 val pomodoroTimeSet = JasiriDataHolder.pomodoroDuration.value
                 descriptorinator.text = getString(R.string.time_to_focus)
+                playButtonBreak.visibility = View.INVISIBLE
+                motivationButtonsBreak.visibility = View.INVISIBLE
                 mTimeLeftMillis = (pomodoroTimeSet * Constants.MINUTE_IN_MILLIS)
             } else {
                 val breakTimeSet = JasiriDataHolder.breakDuration.value
                 descriptorinator.text = getString(R.string.time_for_a_break_xd)
+                playButtonBreak.visibility = View.VISIBLE
+                motivationButtonsBreak.visibility = View.VISIBLE
                 mTimeLeftMillis = (breakTimeSet * Constants.MINUTE_IN_MILLIS)
             }
         }
@@ -340,20 +376,48 @@ class StudyFragment: Fragment() {
         }
     }
 
-    private fun testbtnInit() {
-        binding.forceStarTester.setOnClickListener {
-//            controller.sendMessage(Constants.FWD)
-            (activity as MainActivity).activateFaceDetection()
-//            toggleEyeDetectionEveryFiveMins()
-            JasiriDataHolder.setFaceTrackingIsWanted(true)
+    /**
+     *  Pomodoro break extras
+     */
+
+    private fun playButtonInitStudy() {
+        binding.playButtonBreak.setOnClickListener {
+            Log.d(TAG, "Play Button pressed")
+            if (JasiriDataHolder.bluetoothActiveStatus.value) {
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.methodFragment_study, gameFragment).commitNow()
+            } else {
+                Toast.makeText(activity, "Jasiri is not connected!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun testbtn2Init() {
-        binding.forceStarTester2.setOnClickListener {
-//            (activity as MainActivity).stopFaceDetection()
-            JasiriDataHolder.setFaceTrackingIsWanted(false)
+    private fun freeMotivationInitStudy() {
+        with (binding) {
+            goodCopButtonBreak.setOnClickListener {
+                controller.sendMessage(Constants.GOOD_COP)
+            }
+
+            badCopButtonBreak.setOnClickListener {
+                controller.sendMessage(Constants.BAD_COP)
+            }
         }
     }
+
+//    private fun testbtnInit() {
+//        binding.forceStarTester.setOnClickListener {
+////            controller.sendMessage(Constants.FWD)
+//            (activity as MainActivity).activateFaceDetection()
+////            toggleEyeDetectionEveryFiveMins()
+//            JasiriDataHolder.setFaceTrackingIsWanted(true)
+//        }
+//    }
+//
+//    private fun testbtn2Init() {
+//        binding.forceStarTester2.setOnClickListener {
+////            (activity as MainActivity).stopFaceDetection()
+//            JasiriDataHolder.setFaceTrackingIsWanted(false)
+//        }
+//    }
 
 }
