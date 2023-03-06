@@ -100,8 +100,32 @@
         android:layout_marginBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/num_cycles_title"
-        app:layout_constraintTop_toBottomOf="@id/pomodoro_picker"
-        app:layout_constraintBottom_toTopOf="@+id/ok_btn_pomo_settings"/>
+        app:layout_constraintTop_toBottomOf="@id/pomodoro_picker"/>
+
+    <TextView
+        android:id="@+id/eye_detection_enabler_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eye Detection"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/num_cycles_title"
+        app:layout_constraintBottom_toTopOf="@+id/ok_btn_pomo_settings"
+        app:layout_constraintEnd_toStartOf="@+id/eye_detection_switch"/>
+
+    <Switch
+        android:id="@+id/eye_detection_switch"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:theme="@style/SCBSwitch"
+        app:layout_constraintEnd_toEndOf="@+id/num_cycles_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/num_cycles_spinner"
+        app:layout_constraintStart_toStartOf="@+id/num_cycles_spinner"
+        app:layout_constraintBottom_toTopOf="@+id/ok_btn_pomo_settings"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Button
         android:id="@+id/ok_btn_pomo_settings"

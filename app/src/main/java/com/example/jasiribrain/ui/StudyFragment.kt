@@ -343,6 +343,7 @@ class StudyFragment: Fragment() {
      * EYE DETECTION
      */
     private fun toggleEyeDetectionEveryTwoMins() {
+        if (!JasiriDataHolder.eyeDetectionToggle.value) return
         val timerObj = Timer()
         val timerTaskObj = object : TimerTask() {
             override fun run() {
