@@ -82,9 +82,7 @@ class HomeFragment: Fragment() {
 
     private fun joystickControllerInit() {
         binding.joystickCtrl.setOnMoveListener({ angle, strength ->
-            binding.textViewAngleRight.text = "$angle°"
-            binding.textViewStrengthRight.text = "$strength%"
-            binding.textViewCoordinateRight.text = joystickUpdate(angle, strength)
+            joystickUpdate(angle, strength)
         }, 30)
     }
 
@@ -98,32 +96,20 @@ class HomeFragment: Fragment() {
             prevCmd = Constants.DEFAULT
             return dir
         }
-        when (angle) {  //TODO: reeval
-            in 11..79 -> {
-                dir = "fwdR45"
-            }
-            in 80..100 -> {
+        when (angle) {
+            in 45..134 -> {
                 dir = "fwd"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.FWD)
             }
-            in 101..169 -> {
-                dir = "fwdL45"
-            }
-            in 170..190 -> {
+            in 135..224 -> {
                 dir = "L"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.LEFT)
             }
-            in 191..259 -> {
-                dir = "bwdL45"
-            }
-            in 260..280 -> {
+            in 225..314 -> {
                 dir = "bwd"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.BWD)
             }
-            in 281..349 -> {
-                dir = "bwdR45"
-            }
-            in 350..359, in 0..10 -> {
+            in 315..359, in 0..44 -> {
                 dir = "R"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.RIGHT)
             }

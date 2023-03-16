@@ -87,37 +87,6 @@
         app:layout_constraintStart_toEndOf="@+id/dance_button"
         app:layout_constraintEnd_toEndOf="@+id/joystick_ctrl"/>
 
-    <TextView
-        android:id="@+id/textView_angle_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0°"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textView_strength_right"/>
-
-
-    <TextView
-        android:id="@+id/textView_strength_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_angle_right"
-        android:text="0%"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textView_coordinate_right"/>
-
-
-    <TextView
-        android:id="@+id/textView_coordinate_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_strength_right"
-        android:text="dir"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/joystick_ctrl"/>
-
     <io.github.controlwear.virtual.joystick.android.JoystickView
         xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/joystick_ctrl"
