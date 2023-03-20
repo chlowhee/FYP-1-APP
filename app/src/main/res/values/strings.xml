@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">JasiriBrain</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings_title">Jasiri Settings</string>
     <string name="study">Study</string>
@@ -31,11 +30,6 @@
     <string name="free_motivation">Free Motivation</string>
     <string name="dance">Dance</string>
     <!--    StudyFragment-->
-<!--    <string name="study_title">How do you want Jasiri to accompany you?</string>-->
-<!--    <string name="pomodoro_method">Pomodoro Method</string>-->
-<!--    <string name="getting_things_done_method">Getting Things Done Method</string>-->
-<!--    <string name="force_start_method">Force Start</string>-->
-<!--    <string name="gtd_title">GTD</string>-->
     <string name="pomodoro_title">POMODORO</string>
     <string name="force_start_title">FORCE START</string>
     <string name="jump_start_your_brain">Jump start your brain!</string>

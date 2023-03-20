@@ -39,6 +39,11 @@ class PomodoroSettingDialog: DialogFragment() {
             val breakDuration = binding.breakPicker.value
             val numCycles = binding.numCyclesSpinner.selectedItem.toString()
             Log.d(TAG, "Pomodoro, Break, Cycles: $pomoDuration, $breakDuration, $numCycles")
+            if (binding.eyeDetectionSwitch.isChecked) {
+                JasiriDataHolder.setEyeDetectionToggle(true)
+            } else {
+                JasiriDataHolder.setEyeDetectionToggle(false)
+            }
             JasiriDataHolder.setIsPomodoroBreak(false)
             JasiriDataHolder.setBreakDuration(breakDuration)
             JasiriDataHolder.setNumCycles(numCycles.toInt())
@@ -55,7 +60,7 @@ class PomodoroSettingDialog: DialogFragment() {
     }
 
     private fun initAllPicker() {
-        initPicker(1, 30, binding.pomodoroPicker)    //25-60
+        initPicker(1, 60, binding.pomodoroPicker)    //25-60    PUT TILL 1 FOR DEMONSTRATING PURPOSES
         initPicker(1, 10, binding.breakPicker)       //5-10
         binding.pomodoroPicker.value = JasiriDataHolder.pomodoroDuration.value
         binding.breakPicker.value = JasiriDataHolder.breakDuration.value

@@ -1,5 +1,6 @@
 package com.example.jasiribrain.ui
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -51,10 +52,14 @@ class HomeFragment: Fragment() {
         with(binding) {
             goodCopButton.setOnClickListener {
                 controller.sendMessage(Constants.GOOD_COP)
+                val goodCopVoice: MediaPlayer = MediaPlayer.create(activity, R.raw.good_cop_audio)
+                goodCopVoice.start()
             }
 
             badCopButton.setOnClickListener {
                 controller.sendMessage(Constants.BAD_COP)
+                val badCopVoice: MediaPlayer = MediaPlayer.create(activity, R.raw.bad_cop_audio)
+                badCopVoice.start()
             }
         }
     }
@@ -77,48 +82,30 @@ class HomeFragment: Fragment() {
 
     private fun joystickControllerInit() {
         binding.joystickCtrl.setOnMoveListener({ angle, strength ->
-            binding.textViewAngleRight.text = "$angle°"
-            binding.textViewStrengthRight.text = "$strength%"
-            binding.textViewCoordinateRight.text = joystickUpdate(angle, strength)
+            joystickUpdate(angle, strength)
         }, 30)
     }
 
     private fun joystickUpdate(angle: Int, strength: Int):String {
-        //350-10 right 90   11-79: right 45
-        //80-100 fwd        101 - 169 left 45
-        //170-190 left 90  191 - 259 backleft
-        //260-280 bwd      281 - 349 back right
         var dir = "dir"
-        if (strength < 30) {    //so wun send R when re-centre
+        if (strength < 30) {    //so wun send cmd when re-centre
             prevCmd = Constants.DEFAULT
             return dir
         }
-        when (angle) {  //TODO: reeval
-            in 11..79 -> {
-                dir = "fwdR45"
-            }
-            in 80..100 -> {
+        when (angle) {
+            in 45..134 -> {
                 dir = "fwd"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.FWD)
             }
-            in 101..169 -> {
-                dir = "fwdL45"
-            }
-            in 170..190 -> {
+            in 135..224 -> {
                 dir = "L"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.LEFT)
             }
-            in 191..259 -> {
-                dir = "bwdL45"
-            }
-            in 260..280 -> {
+            in 225..314 -> {
                 dir = "bwd"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.BWD)
             }
-            in 281..349 -> {
-                dir = "bwdR45"
-            }
-            in 350..359, in 0..10 -> {
+            in 315..359, in 0..44 -> {
                 dir = "R"
                 JasiriDataHolder.setJoystickCmdToSend(Constants.RIGHT)
             }

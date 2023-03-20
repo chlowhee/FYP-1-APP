@@ -125,7 +125,19 @@ object JasiriDataHolder {
     }
 
     /**
-     * toggle if eye detection is wanted
+     *  toggle if eye detection is wanted
+     */
+    private val _eyeDetectionToggle = MutableStateFlow(false)
+
+    val eyeDetectionToggle: StateFlow<Boolean>
+        get() = _eyeDetectionToggle
+
+    fun setEyeDetectionToggle(status: Boolean) {
+        _eyeDetectionToggle.value = status
+    }
+
+    /**
+     * to turn on and off eye detection
      */
     private val _eyeDetectionIsWanted = MutableStateFlow(false)
 

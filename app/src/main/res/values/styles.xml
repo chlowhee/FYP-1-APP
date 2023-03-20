@@ -7,4 +7,10 @@
         <item name="colorAccent">@color/silver</item>
     </style>
 
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/joystickBackground</item>
+        <item name="colorSwitchThumbNormal">@color/white</item>
+        <item name="android:colorForeground">#FF221f1f</item>
+    </style>
+
 </resources>

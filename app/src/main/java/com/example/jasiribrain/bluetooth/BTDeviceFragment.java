@@ -201,7 +201,6 @@ public class BTDeviceFragment extends Fragment implements OnRecyclerViewInteract
 //        }
 //    }
 
-    //TODO: check when refresh
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         ArrayList<String> granted = new ArrayList<>();

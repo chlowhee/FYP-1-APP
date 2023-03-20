@@ -16,7 +16,6 @@ interface Constants {
         const val REQUEST_LOCATION_PERMISSION = 2001
 
         // intent extra
-        const val EXTRA_FRAGMENT = "fragment"
         const val EXTRA_DEVICE_ADDRESS = "device_address"
 
         // Message types sent from the BluetoothChatService Handler
@@ -33,14 +32,12 @@ interface Constants {
         // Study methods
         const val FORCE_START_SEL = 0
         const val POMODORO_SEL = 1
-//        const val GTD_SEL = 2
         const val MINUTE_IN_MILLIS = 60000L
         const val FORCE_START_TIME_MS = 2*MINUTE_IN_MILLIS        //  2min
         const val POMODORO_DEFAULT_TIME_MS = 25*MINUTE_IN_MILLIS   //  25min
 
         //Commands to mBot
         const val DEFAULT = "default"
-        const val PING = "ping"
         const val FWD = "A"
         const val BWD = "B"
         const val RIGHT = "C"

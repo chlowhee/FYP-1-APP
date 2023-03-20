@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.bottomNavigationView.menu.findItem(R.id.settings).isChecked = true
-//        setCurrentFragment(settingsFrag)
         supportFragmentManager.beginTransaction().replace(R.id.settings_fragment, settingsFrag).commit()
 
 
@@ -64,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         bottomNavEnabled()
         toggleFaceDetection()
         faceTrackerMover()
-        pingRpiEveryFiveMinutes()
     }
 
     /**
@@ -196,19 +194,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("LogTagForTest", "FACE tracker cmd sent")
             JasiriDataHolder.setFacePosition(0)
         }
-    }
-
-    private fun pingRpiEveryFiveMinutes() { //can forgo
-//        val timerObj = Timer()
-//        val timerTaskObj = object : TimerTask() {
-//            override fun run() {
-//                if (JasiriDataHolder.bluetoothActiveStatus.value) {
-//                    controller.sendMessage("ping")
-//                    Log.d("PING", "send ping")
-//                }
-//            }
-//        }
-//        timerObj.schedule(timerTaskObj, 0, 30000)
     }
 }
 
