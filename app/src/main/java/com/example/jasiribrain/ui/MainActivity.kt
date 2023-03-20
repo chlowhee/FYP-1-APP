@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.bottomNavigationView.menu.findItem(R.id.settings).isChecked = true
-//        setCurrentFragment(settingsFrag)
         supportFragmentManager.beginTransaction().replace(R.id.settings_fragment, settingsFrag).commit()
 
 

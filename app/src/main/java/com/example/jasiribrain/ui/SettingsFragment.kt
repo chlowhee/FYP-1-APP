@@ -124,7 +124,6 @@ class SettingsFragment : Fragment(), BluetoothStatusListener {
             "K" -> {
                 Toast.makeText(activity, "Jasiri connected", Toast.LENGTH_LONG).show()
                 binding.getPairedStatus.text = "Connected: " + controller.connectedDeviceName
-//                controller.sendMessage(Constants.PING)
                 JasiriDataHolder.setBluetoothIsActiveStatus(true)
                 if (JasiriDataHolder.faceTrackingIsWanted.value) {
                     JasiriDataHolder.setFaceTrackingIsWanted(false)

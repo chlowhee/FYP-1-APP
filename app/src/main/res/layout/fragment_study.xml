@@ -125,27 +125,6 @@
         app:layout_constraintStart_toStartOf="@id/pomodoro_title_selected"
         app:layout_constraintTop_toBottomOf="@id/pomodoro_title_selected"/>
 
-<!--    <Button-->
-<!--        android:id="@+id/force_star_tester"-->
-<!--        android:layout_width="200dp"-->
-<!--        android:layout_height="150dp"-->
-<!--        android:backgroundTint="@color/silver"-->
-<!--        android:text="START CAM"-->
-<!--        android:textColor="@color/black"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@id/haptic_1"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
-
-<!--    <Button-->
-<!--        android:id="@+id/force_star_tester_2"-->
-<!--        android:layout_width="200dp"-->
-<!--        android:layout_height="150dp"-->
-<!--        android:backgroundTint="@color/silver"-->
-<!--        android:text="stop cam"-->
-<!--        android:textColor="@color/black"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/force_star_tester"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/force_star_tester"/>-->
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/haptic_1"
         android:layout_width="110dp"

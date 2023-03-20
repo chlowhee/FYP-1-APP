@@ -53,8 +53,6 @@ class StudyFragment: Fragment() {
         studyMethodUiInit()
         buttonClick()
         timeStartInit()
-//        testbtnInit()
-//        testbtn2Init()
         pomodoroSettingsInit()
         pomoSettingsSet()
         cyclesLeftSet()
@@ -141,7 +139,7 @@ class StudyFragment: Fragment() {
         binding.run {
             timerStartButton.setOnClickListener {
                 if (timerStartButton.text == getString(R.string.start)) {
-                    if (JasiriDataHolder.numCyclesCounter.value == 0) {
+                    if (JasiriDataHolder.studyMethodSelect.value == Constants.POMODORO_SEL && JasiriDataHolder.numCyclesCounter.value == 0) {
                         cyclesZeroAlertDialogInit()
                     } else {
                         startTimer()
@@ -162,7 +160,7 @@ class StudyFragment: Fragment() {
 
             override fun onTick(millisUntilFinished: Long) {
                 mTimeLeftMillis = millisUntilFinished
-                if (binding.studyTimer.text == "10:02" || binding.studyTimer.text == "05:02") {
+                if (binding.studyTimer.text == "05:02") {
                     Log.d(TAG, "${mTimeLeftMillis/Constants.MINUTE_IN_MILLIS} minutes left")
                     timerMonitorer(mTimeLeftMillis/Constants.MINUTE_IN_MILLIS)
                 }
@@ -193,6 +191,14 @@ class StudyFragment: Fragment() {
 
     private fun stopTimer() {
         mCountDownTimer.cancel()    //pause timer
+        if (JasiriDataHolder.studyMethodSelect.value == Constants.FORCE_START_SEL) {
+            displayTimerInit()
+            JasiriDataHolder.setTimerIsActiveStatus(false)
+            Log.d(TAG, "timer stopped")
+            binding.timerStartButton.text = getString(R.string.start)
+            return
+        }
+
         if (!JasiriDataHolder.isPomodoroBreak.value) {
             timerStopAlertDialogInit()
         } else {
@@ -295,23 +301,19 @@ class StudyFragment: Fragment() {
     /**
      * ROBOT COMMAND FUNCTIONS
      */
-
-    //10 min -> fidget
-    //5 min -> reminder to keep up
-    //timer stop -> ring and do congratulatory motion
     
     private fun timerMonitorer(time: Long) {
         if (JasiriDataHolder.isPomodoroBreak.value) return
         when (time) {
-            10L -> {
-                toggleEyeD = false
-                toggleEyeDetectionEveryTwoMins()
-                requireActivity().runOnUiThread {
-                    val tenMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.ten_mins_left)
-                    tenMinReminder.start()
-                }
-                controller.sendMessage(Constants.FIDGET)
-            }
+//            10L -> {  //REMOVED BUT KEEPING HERE FOR REF
+//                toggleEyeD = false
+//                toggleEyeDetectionEveryTwoMins()
+//                requireActivity().runOnUiThread {
+//                    val tenMinReminder: MediaPlayer = MediaPlayer.create(activity, R.raw.ten_mins_left)
+//                    tenMinReminder.start()
+//                }
+//                controller.sendMessage(Constants.FIDGET)
+//            }
             5L -> {
                 toggleEyeD = false
                 toggleEyeDetectionEveryTwoMins()
@@ -408,21 +410,4 @@ class StudyFragment: Fragment() {
             }
         }
     }
-
-//    private fun testbtnInit() {
-//        binding.forceStarTester.setOnClickListener {
-////            controller.sendMessage(Constants.FWD)
-//            (activity as MainActivity).activateFaceDetection()
-////            toggleEyeDetectionEveryFiveMins()
-//            JasiriDataHolder.setFaceTrackingIsWanted(true)
-//        }
-//    }
-//
-//    private fun testbtn2Init() {
-//        binding.forceStarTester2.setOnClickListener {
-////            (activity as MainActivity).stopFaceDetection()
-//            JasiriDataHolder.setFaceTrackingIsWanted(false)
-//        }
-//    }
-
 }

@@ -87,12 +87,8 @@ class HomeFragment: Fragment() {
     }
 
     private fun joystickUpdate(angle: Int, strength: Int):String {
-        //350-10 right 90   11-79: right 45
-        //80-100 fwd        101 - 169 left 45
-        //170-190 left 90  191 - 259 backleft
-        //260-280 bwd      281 - 349 back right
         var dir = "dir"
-        if (strength < 30) {    //so wun send R when re-centre
+        if (strength < 30) {    //so wun send cmd when re-centre
             prevCmd = Constants.DEFAULT
             return dir
         }

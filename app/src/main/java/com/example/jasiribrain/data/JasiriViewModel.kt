@@ -6,10 +6,6 @@ import androidx.lifecycle.liveData
 
 class JasiriViewModel: ViewModel() {
 
-    val bluetoothConnectionStatus: LiveData<Boolean> = liveData {
-                JasiriDataHolder.bluetoothActiveStatus.collect{ emit(it) }
-    }
-
     val isStudyingStatus: LiveData<Boolean> = liveData {
             JasiriDataHolder.timerActiveStatus.collect{emit(it)}
     }
@@ -20,10 +16,6 @@ class JasiriViewModel: ViewModel() {
 
     val pomodoroDurationStatus: LiveData<Int> = liveData {
         JasiriDataHolder.pomodoroDuration.collect{emit(it)}
-    }
-
-    val breakDurationStatus: LiveData<Int> = liveData {
-        JasiriDataHolder.breakDuration.collect{emit(it)}
     }
 
     val numCyclesStatus: LiveData<Int> = liveData {
